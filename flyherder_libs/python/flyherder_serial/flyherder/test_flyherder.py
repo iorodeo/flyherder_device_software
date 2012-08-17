@@ -1,5 +1,5 @@
 from __future__ import print_function
-from fly_herder import FlyHerder
+from flyherder import FlyHerder
 from pprint import pprint
 
 TEST_FLOAT_PREC = 1.0e-6

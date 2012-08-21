@@ -415,7 +415,7 @@ void MessageHandler::handleSetDrivePowerOn() {
 
 void MessageHandler::handleSetDrivePowerOff() {
     dprint.addIntItem("status", rspSuccess);
-    systemState.setDrivePowerOn();
+    systemState.setDrivePowerOff();
 }
 
 void MessageHandler::handleIsDrivePowerOn() {

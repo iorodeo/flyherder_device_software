@@ -23,6 +23,8 @@ void MotorDrive::initialize() {
     pinMode(_powerPin, OUTPUT);
     pinMode(_disablePin, OUTPUT);
     pinMode(_faultPin, INPUT);
+    setPowerOff();
+    disable();
 
     // Assign pins (step, dir, home) to motors
     for (int i=0; i<constants::numAxis; i++) {
@@ -43,6 +45,13 @@ void MotorDrive::enable() {
 
 void MotorDrive::disable() {
     digitalWrite(_disablePin,HIGH);
+    stop();
+}
+
+void MotorDrive::stop() {
+    for (int i=0; i<constants::numAxis; i++) {
+        stepper[i].stop();
+    }
 }
 
 void MotorDrive::setPowerOn() {
@@ -51,10 +60,65 @@ void MotorDrive::setPowerOn() {
 
 void MotorDrive::setPowerOff() {
     digitalWrite(_powerPin,LOW);
+    stop();
+}
+
+void MotorDrive::setMaxSpeed(unsigned int i, float v) {
+    if (i < constants::numAxis) {
+        stepper[i].setMaxSpeed(v);
+    }
+}
+
+void MotorDrive::setMaxSpeedAll(float v) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setMaxSpeed(i,v);
+    }
+}
+
+void MotorDrive::setAcceleration(unsigned int i, float a) {
+    if (i < constants::numAxis) {
+        stepper[i].setAcceleration(a);
+    }
+}
+
+void MotorDrive::setAccelerationAll(float a) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setAcceleration(i,a);
+    }
+}
+
+bool MotorDrive::isPowerOn() {
+    if (digitalRead(_powerPin) == HIGH) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool MotorDrive::isEnabled() {
+    if (digitalRead(_disablePin)==LOW) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool MotorDrive::isRunning() {
+    bool flag = false;
+    for (int i=0; i<constants::numAxis; i++) {
+        if (stepper[i].isRunning()) {
+            flag = true;
+        }
+    }
+    return flag;
 }
 
 void MotorDrive::update() {
-    for (int i=0; i<constants::numAxis; i++) {
-        stepper[i].update();
+    if (isPowerOn() && isEnabled()) {
+        for (int i=0; i<constants::numAxis; i++) {
+            stepper[i].update();
+        }
     }
 }

@@ -10,8 +10,16 @@ class MotorDrive {
         void initialize();
         void enable();
         void disable();
+        void stop();
         void setPowerOn();
         void setPowerOff();
+        void setMaxSpeed(unsigned int i, float v);
+        void setMaxSpeedAll(float v);
+        void setAcceleration(unsigned int i, float a);
+        void setAccelerationAll(float a);
+        bool isEnabled();
+        bool isPowerOn();
+        bool isRunning();
         void update();
 
         StepperMotor stepper[constants::numAxis];

@@ -21,7 +21,6 @@ class SystemState {
         void disable();
         bool isEnabled();
 
-        void start();
         void stop();
         bool isRunning();
 
@@ -36,9 +35,11 @@ class SystemState {
         bool setMaxSeparation(Array<float,constants::numDim> maxSeparation);
         Array<float,constants::numDim> getMaxSeparation();
 
+        void setMaxSpeedToDefault();
         bool setMaxSpeed(float v);
         float getMaxSpeed();
 
+        void setAccelerationToDefault();
         bool setAcceleration(float a);
         float getAcceleration();
 
@@ -67,8 +68,6 @@ class SystemState {
     private:
 
         bool checkAxisArg(int axis);
-
-        volatile bool _enabled;
         Array<float,constants::numDim> _maxSeparation;
         Array<char,constants::numAxis> _orientation;
         float _stepsPerMM;   

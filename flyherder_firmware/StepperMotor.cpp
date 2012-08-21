@@ -1,3 +1,4 @@
+#include <util/atomic.h>
 #include "StepperMotor.h"
 
 StepperMotor::StepperMotor() {
@@ -33,15 +34,23 @@ void StepperMotor::setDirNormal() {
 }
 
 bool StepperMotor::isRunning() {
-    return _running;
+    bool running;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        running = _running;
+    }
+    return running;
 }
 
 void StepperMotor::start() {
-    _running = true;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        _running = true;
+    }
 }
 
 void StepperMotor::stop() {
-    _running = false;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) { 
+        _running = false;
+    }
 }
 
 void StepperMotor::update() {

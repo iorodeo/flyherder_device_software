@@ -11,6 +11,8 @@
 SystemState::SystemState() {
     setErrMsg("");
     setStepsPerMMToDefault();
+    setMaxSpeedToDefault();
+    setAccelerationToDefault();
     setMaxSeparationToDefault();
     setOrientationToDefault();
     // DEVELOPMENT
@@ -31,51 +33,35 @@ void SystemState::initialize() {
     Timer1.initialize(constants::timerPeriod_us);
     Timer1.attachInterrupt(timerUpdate);
     Timer1.start();
-
-    // Turn on drive power and enable.
-    setDrivePowerOn();
-    enable();
 }
 
-void SystemState::enable() {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        _enabled = true;
-    }
-}
 
 void SystemState::setDrivePowerOn() {
-    // NOT DONE
+    motorDrive.setPowerOn();
 }
 
 void SystemState::setDrivePowerOff() {
-    //NOT DONE
+    motorDrive.setPowerOff();
 }
 
 bool SystemState::isDrivePowerOn() {
-    // NOT DONE
-    return true;
+    return motorDrive.isPowerOn();
+}
+
+void SystemState::enable() {
+    motorDrive.enable();
 }
 
 void SystemState::disable() {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        _enabled = false;
-    }
+    motorDrive.disable();
 }
 
 bool SystemState::isEnabled() {
-    bool enabled;
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        enabled = _enabled;
-    }
-    return enabled;
-}
-
-void SystemState::start() {
-    // NOT DONE
+    return motorDrive.isEnabled();
 }
 
 void SystemState::stop() {
-    // NOT DONE
+    motorDrive.stop();
 }
 
 bool SystemState::isRunning() {
@@ -83,9 +69,7 @@ bool SystemState::isRunning() {
 }
 
 void SystemState::update() {
-    if (_enabled) {
-        // NOT DONE
-    }
+    motorDrive.update();
     timerCount++;
 }
 
@@ -144,14 +128,22 @@ Array<float,constants::numDim> SystemState::getMaxSeparation() {
     return _maxSeparation;
 }
 
+void SystemState::setMaxSpeedToDefault() {
+    setMaxSpeed(constants::maxSpeedDefault);
+}
+
 bool SystemState::setMaxSpeed(float v) {
-    // NOT DONE
+    motorDrive.setMaxSpeedAll(_stepsPerMM*v);
+    _maxSpeed = v;
     return true;
 }
 
 float SystemState::getMaxSpeed() {
-    // NOT DONE
-    return 0.0;
+    return _maxSpeed;
+}
+
+void SystemState::setAccelerationToDefault() {
+    setAcceleration(constants::accelerationDefault);
 }
 
 bool SystemState::setAcceleration(float a) {

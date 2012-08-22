@@ -12,16 +12,11 @@ template <class T, int size> class Array {
 
     private:
         T _values[size];
-        T _outOfBounds;
 
 };
 
 template <class T, int size> 
-Array<T,size>::Array() {
-    for (int i=0; i<size; i++) {
-        _values[i] = 0.0;
-    }
-}
+Array<T,size>::Array() {} 
 
 template <class T, int size>
 Array<T,size>::Array(T value) {
@@ -41,8 +36,8 @@ T& Array<T, size>::operator[](int i) {
         return _values[i];
     }
     else {
-        _outOfBounds = 0.0;
-        return _outOfBounds;
+        T dummy;
+        return dummy;
     }
 }
 

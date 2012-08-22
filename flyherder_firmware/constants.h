@@ -20,6 +20,8 @@ namespace constants {
     extern const float stepsPerMMDefault;
     extern const char allowedOrientation[numOrientation];
     extern const char orientationDefault;
+    extern const char orientationNormal;
+    extern const char orientationInverted;
     extern const int stepperMode;
     extern const int ledStatusPin;
     extern const int driveDisablePin;

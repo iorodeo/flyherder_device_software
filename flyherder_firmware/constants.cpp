@@ -1,7 +1,7 @@
 #include "constants.h"
 namespace constants {
 
-    const long timerPeriod_us = 100;
+    const long timerPeriod_us = 300;
 
     // Communications parameters
     const unsigned int baudrate = 9600;
@@ -15,12 +15,14 @@ namespace constants {
     const float threadLead = 0.75*25.4;       // (mm)
     const float maxSeparationDefault = 100;   // (mm)
     const float maxSpeedDefault = 10.0;       // (mm/s)
-    const float accelerationDefault = 500.0;  // (mm/s**2)
+    const float accelerationDefault = 5.0;    // (mm/s**2)
     const float stepsPerMMDefault = stepsPerRev/threadLead;  
 
     // Orientation 
     const char allowedOrientation[numOrientation] = {'+', '-'};
     const char orientationDefault = '+';
+    const char orientationNormal = '+';
+    const char orientationInverted = '-';
 
     // Stepper params and pin assignment
     const int stepperMode = 1;

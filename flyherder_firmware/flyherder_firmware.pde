@@ -14,18 +14,22 @@ void setup() {
     Serial.begin(constants::baudrate);
     systemState.initialize();
 
-    //motorDrive.initialize();
-
-    //for (int i=0; i<constants::numAxis; i++) {
-    //    Serial << "stepper[" << i << "]" << endl;
-    //    Serial << "  " << "_running " << motorDrive.stepper[i]._running << endl;
-    //    Serial << "  " << "_dirInverted " << motorDrive.stepper[i]._dirInverted << endl;
-
-
-    //}
+    Array<float, constants::numAxis> pos;
+    for (int i=0; i<constants::numAxis; i++) {
+        pos[i] = 10000.0;
+    }
+    systemState.setDrivePowerOn();
+    systemState.enable();
+    systemState.moveToPosition(pos);
 }
 
 void loop() { 
-    messageHandler.processMsg(); 
+    unsigned long t0;
+    unsigned long t1;
+    t0 = micros();
+    systemState.update();
+    t1 = micros();
+    Serial << t1-t0 << endl;
+    //messageHandler.processMsg(); 
 }
 

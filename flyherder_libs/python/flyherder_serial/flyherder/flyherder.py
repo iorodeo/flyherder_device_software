@@ -33,13 +33,33 @@ class SerialDevice(serial.Serial):
         cmd = ''.join(cmdList)
         self.debugPrint('cmd', cmd)
         self.write(cmd)
+
         rspStr = self.readline()
         self.debugPrint('rspStr', rspStr)
         try:
             rspDict = jsonStrToDict(rspStr)
         except Exception, e:
             errMsg = 'unable to parse device response {0}'.format(str(e))
+            self.flush()
             raise IOError, errMsg
+
+
+        ## ----------------
+        #tryCnt = 0
+        #tryCntMax = 5
+        #while tryCnt < tryCntMax:
+        #    rspStr = self.readline()
+        #    self.debugPrint('rspStr', rspStr)
+        #    try:
+        #        rspDict = jsonStrToDict(rspStr)
+        #        break;
+        #    except Exception, e:
+        #        tryCnt+=1
+        #if tryCnt == tryCntMax: 
+        #    errMsg = 'unable to parse device response'
+        #    raise IOError, errMsg
+        ## --------------------
+
         try:
             status = rspDict.pop('status')
         except KeyError:
@@ -148,7 +168,7 @@ class FlyHerder(SerialDevice):
         else:
             allValuesEmpty = True 
             for v in rspDict.values():
-                if v:
+                if not type(v) == str or v:
                     allValuesEmpty = False
                     break
             if allValuesEmpty:

@@ -24,8 +24,8 @@ class SystemState {
         void stop();
         bool isRunning();
 
-        bool moveToPosition(Array<float,constants::numAxis> pos);
-        bool moveAxisToPosition(int axis, float pos);
+        bool moveToPosition(Array<float,constants::numAxis> posMM);
+        bool moveAxisToPosition(int axis, float posMM);
         bool moveToHome();
 
         Array<float,constants::numAxis> getPosition();

@@ -55,7 +55,12 @@ void StepperMotor::stop() {
 
 void StepperMotor::update() {
     if (_running) {
-        run();
+        if (currentPosition() == targetPosition() && speed()==0) {
+            _running = false;
+        } 
+        else {
+            run();
+        }
     }
 }
 

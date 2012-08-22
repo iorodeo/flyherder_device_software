@@ -10,11 +10,6 @@
 
 SystemState::SystemState() {
     setErrMsg("");
-    setStepsPerMMToDefault();
-    setMaxSpeedToDefault();
-    setAccelerationToDefault();
-    setMaxSeparationToDefault();
-    setOrientationToDefault();
     // DEVELOPMENT
     timerCount=0;
 }
@@ -29,12 +24,22 @@ void SystemState::initialize() {
     setDrivePowerOff();
     disable();
 
-    // Setup system state update timer
-    Timer1.initialize(constants::timerPeriod_us);
-    Timer1.attachInterrupt(timerUpdate);
-    Timer1.start();
+    setStepsPerMMToDefault();
+    setMaxSpeedToDefault();
+    setAccelerationToDefault();
+    setMaxSeparationToDefault();
+    setOrientationToDefault();
+
+    //// Setup system state update timer
+    //Timer1.initialize(constants::timerPeriod_us);
+    //Timer1.attachInterrupt(timerUpdate);
+    //Timer1.start();
 }
 
+void SystemState::update() {
+    motorDrive.update();
+    timerCount++;
+}
 
 void SystemState::setDrivePowerOn() {
     motorDrive.setPowerOn();
@@ -61,26 +66,29 @@ bool SystemState::isEnabled() {
 }
 
 void SystemState::stop() {
-    motorDrive.stop();
+    motorDrive.stopAll();
 }
 
 bool SystemState::isRunning() {
+    return motorDrive.isRunning();
+}
+
+
+bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
+    Array<long,constants::numAxis> posStep;
+    for (int i=0; i<constants::numAxis; i++) {
+        posStep[i] = (long)(_stepsPerMM*posMM[i]);
+    }
+    motorDrive.setTargetPosAbsAll(posStep);
+    motorDrive.startAll();
     return true;
 }
 
-void SystemState::update() {
-    motorDrive.update();
-    timerCount++;
-}
-
-bool SystemState::moveToPosition(Array<float,constants::numAxis> pos) {
-    /// NOT DONE
-    return true;
-}
-
-bool SystemState::moveAxisToPosition(int axis, float pos) {
-    // NOT DONE
+bool SystemState::moveAxisToPosition(int axis, float posMM) {
+    long posStep = (long)(_stepsPerMM*posMM);
     if (!checkAxisArg(axis))  {return false;}
+    motorDrive.setTargetPosAbs(axis,posStep);
+    motorDrive.start(axis);
     return true;
 }
 
@@ -91,18 +99,18 @@ bool SystemState::moveToHome() {
 }
 
 Array<float,constants::numAxis> SystemState::getPosition() {
-    // NOT DONE
-    Array<float,4> pos;
+    Array<long, constants::numAxis> posSteps;
+    Array<float,constants::numAxis> posMM;
+    posSteps = motorDrive.currentPositionAll();
     for (int i=0; i<constants::numAxis; i++) {
-        pos[i] = (float)(i+1);
+        posMM[i] = ((float) posSteps[i])/_stepsPerMM;
     }
-    return pos;
+    return posMM;
 }
 
 float SystemState::getAxisPosition(int axis) {
-    // NOT DONE
     if (!checkAxisArg(axis)) {return 0.0;};
-    return 0.0;
+    return motorDrive.currentPosition(axis);
 }
 
 void SystemState::setMaxSeparationToDefault() { 
@@ -147,23 +155,23 @@ void SystemState::setAccelerationToDefault() {
 }
 
 bool SystemState::setAcceleration(float a) {
-    // NOT DONE
+    motorDrive.setAccelerationAll(_stepsPerMM*a);
+    _acceleration = a;
     return true;
 }
 
 float SystemState::getAcceleration() {
-    // NOT DONE
-    return 0.0;
+    return _acceleration;
 }
 
 bool SystemState::isInHomePosition() {
-    // NOT DONE
-    return false;
+    bool rtnVal = false;
+    if (~isRunning()) {
+    }
+    return rtnVal;
 }
 
-
 bool SystemState::setOrientation(Array<char,constants::numAxis> orientation) {
-    // NOT DONE
     for (int i=0; i<constants::numAxis; i++) {
         if (!setAxisOrientation(i,orientation[i])) {
             return false;
@@ -172,7 +180,6 @@ bool SystemState::setOrientation(Array<char,constants::numAxis> orientation) {
 }
 
 bool SystemState::setAxisOrientation(int axis, char orientation) {
-    // NOT DONE
     bool test = false;
     if (!checkAxisArg(axis)) {return false;}
     for (int i=0; i<constants::numOrientation; i++) {
@@ -184,12 +191,12 @@ bool SystemState::setAxisOrientation(int axis, char orientation) {
         setErrMsg("uknown value for orientation");
         return false;
     }
+    motorDrive.setDirection((unsigned int) axis, orientation);
     _orientation[axis] = orientation;
     return true;
 }
 
 void SystemState::setOrientationToDefault() {
-    // NOT DONE
     Array<char,constants::numAxis> orientation = 
         Array<char,constants::numAxis>(constants::orientationDefault);
     setOrientation(orientation);
@@ -242,7 +249,6 @@ bool SystemState::checkAxisArg(int axis) {
         return true;
     }
 }
-
 
 // ----------------------------------------------------------------------
 

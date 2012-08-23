@@ -40,10 +40,12 @@ class MotorDrive {
         void setTargetPosAbsAll(Array<long,constants::numAxis> posAbs);
         void setTargetPosRelAll(Array<long,constants::numAxis> posRel);
 
+        void computeNewSpeeds();
+
         long currentPosition(unsigned int i);
         Array<long, constants::numAxis> currentPositionAll();
 
-    private:
+    //private:
         Array<StepperMotor,constants::numAxis> _stepper;
         int _powerPin;
         int _disablePin;

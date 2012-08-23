@@ -64,3 +64,6 @@ void StepperMotor::update() {
     }
 }
 
+void StepperMotor::computeNewSpeed() {
+    AccelStepper::computeNewSpeed();
+}

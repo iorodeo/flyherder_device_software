@@ -1,6 +1,6 @@
 #ifndef _STEPPER_MOTOR_H_
 #define _STEPPER_MOTOR_H_
-#include <AccelStepper.h>
+#include "AccelStepper.h"
 #include "constants.h"
 
 
@@ -16,6 +16,7 @@ class StepperMotor : public AccelStepper {
         void start();
         void stop();
         void update();
+        void computeNewSpeed();
     //private:
         int _homePin;
         volatile bool _running;

@@ -23,33 +23,24 @@ if 0:
 
 if 1:
     print(dev.getPosition())
-    dev.setMaxSpeed(200.0)
-    dev.setAcceleration(100.0)
-    #dev.setOrientation('+','+','+','+')
-    dev.setOrientation('-','-','-','-')
+    dev.setMaxSpeed(50.0)
+    dev.setAcceleration(5.0)
+    dev.setOrientation('+','+','+','+')
+    #dev.setOrientation('-','-','-','-')
     print(dev.getOrientation())
     dev.setDrivePowerOn()
     dev.enable()
     time.sleep(2.0)
 
-    pos_list = [-50,0]
+    pos_list = [50,0,50,0,50,0]
     for pos in pos_list:
         print('move to pos', pos)
-        dev.moveToPosition(pos,pos,pos,pos)
+        #dev.moveToPosition(pos,pos,pos,pos)
         #dev.setAxisOrientation('x0','-')
-        #dev.moveAxisToPosition('x0',pos)
-        while 1:
-            try:
-                if not dev.isRunning():
-                    break
-            except IOError:
-                print('IOError 1')
-                pass
-            try:
-                print(dev.getPosition())
-            except Exception:
-                print('IOError 2')
-                pass
+        dev.moveAxisToPosition('x0',pos)
+        while 1: 
+            if not dev.isRunning():
+                break
             time.sleep(0.2)
         time.sleep(1.0)
     print(dev.getPosition())

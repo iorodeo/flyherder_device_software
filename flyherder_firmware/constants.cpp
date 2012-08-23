@@ -1,7 +1,7 @@
 #include "constants.h"
 namespace constants {
 
-    const long timerPeriod_us = 300;
+    const long timerPeriod_us = 250;
 
     // Communications parameters
     const unsigned int baudrate = 9600;

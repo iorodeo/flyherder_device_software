@@ -88,22 +88,10 @@ void MotorDrive::startAll() {
 
 bool MotorDrive::isPowerOn() {
     return _powerOnFlag;
-    //if (digitalRead(_powerPin) == HIGH) {
-    //    return true;
-    //}
-    //else {
-    //    return false;
-    //}
 }
 
 bool MotorDrive::isEnabled() {
     return _enabledFlag;
-    //if (digitalRead(_disablePin)==LOW) {
-    //    return true;
-    //}
-    //else {
-    //    return false;
-    //}
 }
 
 bool MotorDrive::isRunning() {
@@ -128,7 +116,7 @@ void MotorDrive::setPowerOff() {
 
 void MotorDrive::setMaxSpeed(unsigned int i, float v) {
     if (i < constants::numAxis) {
-        _stepper[i].setMaxSpeed(v);
+        _stepper[i].setMaxSpeed((unsigned int) v);
     }
 }
 
@@ -140,7 +128,7 @@ void MotorDrive::setMaxSpeedAll(float v) {
 
 void MotorDrive::setAcceleration(unsigned int i, float a) {
     if (i < constants::numAxis) {
-        _stepper[i].setAcceleration(a);
+        _stepper[i].setAcceleration((unsigned int) a);
     }
 }
 
@@ -185,6 +173,7 @@ long MotorDrive::currentPosition(unsigned int i) {
 void MotorDrive::setTargetPosAbs(unsigned int i, long posAbs) {
     if (i < constants::numAxis) {
         _stepper[i].moveTo(posAbs);
+        _stepper[i].computeNewSpeed();
     }
 }
 
@@ -203,5 +192,11 @@ void MotorDrive::setTargetPosAbsAll(Array<long,constants::numAxis> posAbs) {
 void MotorDrive::setTargetPosRelAll(Array<long,constants::numAxis> posRel) {
     for (int i=0; i<constants::numAxis; i++) {
         setTargetPosRel(i,posRel[i]);
+    }
+}
+
+void MotorDrive::computeNewSpeeds() {
+    for (int i=0; i<constants::numAxis; i++) {
+        _stepper[i].computeNewSpeed();
     }
 }

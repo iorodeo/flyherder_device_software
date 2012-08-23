@@ -30,10 +30,10 @@ void SystemState::initialize() {
     setMaxSeparationToDefault();
     setOrientationToDefault();
 
-    //// Setup system state update timer
-    //Timer1.initialize(constants::timerPeriod_us);
-    //Timer1.attachInterrupt(timerUpdate);
-    //Timer1.start();
+    // Setup system state update timer
+    Timer1.initialize(constants::timerPeriod_us);
+    Timer1.attachInterrupt(timerUpdate);
+    Timer1.start();
 }
 
 void SystemState::update() {
@@ -234,6 +234,10 @@ void SystemState::setLEDStatusPinOn() {
 
 void SystemState::setLEDStatusPinOff() {
     digitalWrite(constants::ledStatusPin,LOW);
+}
+
+void SystemState::computeNewMotorSpeeds() {
+    motorDrive.computeNewSpeeds();
 }
 
 void SystemState::setErrMsg(char *msg) {

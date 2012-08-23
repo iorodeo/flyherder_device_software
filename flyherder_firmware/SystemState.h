@@ -59,13 +59,15 @@ class SystemState {
         void setLEDStatusPinOn();
         void setLEDStatusPinOff();
 
+        void computeNewMotorSpeeds();
+
         void setErrMsg(char *);
         char errMsg[SYS_ERR_BUF_SZ];
 
         // DEVELOPMENT
         volatile long timerCount;
 
-    private:
+    //private:
 
         bool checkAxisArg(int axis);
         Array<float,constants::numDim> _maxSeparation;

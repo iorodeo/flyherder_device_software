@@ -23,8 +23,7 @@ if 0:
 
 if 1:
     print(dev.getPosition())
-    dev.setMaxSpeed(50.0)
-    dev.setAcceleration(5.0)
+    dev.setSpeed(70.0)
     dev.setOrientation('+','+','+','+')
     #dev.setOrientation('-','-','-','-')
     print(dev.getOrientation())
@@ -32,12 +31,12 @@ if 1:
     dev.enable()
     time.sleep(2.0)
 
-    pos_list = [50,0,50,0,50,0]
+    pos_list = [100,0,100,0,100,0]
     for pos in pos_list:
         print('move to pos', pos)
-        #dev.moveToPosition(pos,pos,pos,pos)
+        dev.moveToPosition(pos,pos,pos,pos)
         #dev.setAxisOrientation('x0','-')
-        dev.moveAxisToPosition('x0',pos)
+        #dev.moveAxisToPosition('x0',pos)
         while 1: 
             if not dev.isRunning():
                 break

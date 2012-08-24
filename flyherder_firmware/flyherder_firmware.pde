@@ -1,7 +1,6 @@
 #include <Streaming.h>
 #include <TimerOne.h>
-#include "AccelStepper.h"
-#include "StepperMotor.h"
+#include "Stepper.h"
 #include "MotorDrive.h"
 #include "SerialReceiver.h"
 #include "DictPrinter.h"

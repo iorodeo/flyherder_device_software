@@ -44,10 +44,8 @@ class MessageHandler : public SerialReceiver {
         void handleGetAxisPosition();
         void handleSetMaxSeparation();
         void handleGetMaxSeparation();
-        void handleSetMaxSpeed();
-        void handleGetMaxSpeed();
-        void handleSetAcceleration();
-        void handleGetAcceleration();
+        void handleSetSpeed();
+        void handleGetSpeed();
         void handleIsInHomePosition();
         void handleSetOrientation();
         void handleGetOrientation();

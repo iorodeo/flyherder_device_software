@@ -11,7 +11,6 @@ class SystemState {
     public:
         SystemState();
         void initialize();
-        void update();
 
         void setDrivePowerOn();
         void setDrivePowerOff();
@@ -35,13 +34,8 @@ class SystemState {
         bool setMaxSeparation(Array<float,constants::numDim> maxSeparation);
         Array<float,constants::numDim> getMaxSeparation();
 
-        void setMaxSpeedToDefault();
-        bool setMaxSpeed(float v);
-        float getMaxSpeed();
-
-        void setAccelerationToDefault();
-        bool setAcceleration(float a);
-        float getAcceleration();
+        bool setSpeed(float v);
+        float getSpeed();
 
         bool isInHomePosition();
 
@@ -56,16 +50,11 @@ class SystemState {
         bool setStepsPerMM(float stepsPerMM);
         float getStepsPerMM();
 
-        void setLEDStatusPinOn();
-        void setLEDStatusPinOff();
-
-        void computeNewMotorSpeeds();
+        void setLedStatusOn();
+        void setLedStatusOff();
 
         void setErrMsg(char *);
         char errMsg[SYS_ERR_BUF_SZ];
-
-        // DEVELOPMENT
-        volatile long timerCount;
 
     //private:
 
@@ -73,7 +62,7 @@ class SystemState {
         Array<float,constants::numDim> _maxSeparation;
         Array<char,constants::numAxis> _orientation;
         float _stepsPerMM;   
-        float _maxSpeed;
+        float _speed;
         float _acceleration;
         MotorDrive motorDrive;
         

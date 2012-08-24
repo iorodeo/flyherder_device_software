@@ -38,11 +38,8 @@ enum {
     cmdSetMaxSeparation,       // Done
     cmdGetMaxSeparation,       // Done
     
-    cmdSetMaxSpeed,            // Done *
-    cmdGetMaxSpeed,            // Done *
-
-    cmdSetAcceleration,        // Done *
-    cmdGetAcceleration,        // Done *
+    cmdSetSpeed,               // Done *
+    cmdGetSpeed,               // Done *
 
     cmdSetOrientation,         // Done *
     cmdGetOrientation,         // Done 
@@ -59,7 +56,6 @@ enum {
     cmdGetModelNumber,         // Done *
 
     // DEVELOPMENT
-    cmdGetTimerCount,
     cmdDebug, 
 };
 
@@ -188,20 +184,12 @@ void MessageHandler::msgSwitchYard() {
             handleGetMaxSeparation();
             break;
 
-        case cmdSetMaxSpeed:
-            handleSetMaxSpeed();
+        case cmdSetSpeed:
+            handleSetSpeed();
             break;
 
-        case cmdGetMaxSpeed:
-            handleGetMaxSpeed();
-            break;
-
-        case cmdSetAcceleration:
-            handleSetAcceleration();
-            break;
-
-        case cmdGetAcceleration:
-            handleGetAcceleration();
+        case cmdGetSpeed:
+            handleGetSpeed();
             break;
 
         case cmdIsInHomePosition:
@@ -245,16 +233,13 @@ void MessageHandler::msgSwitchYard() {
             break;
 
         // DEVELOPMENT
-        case cmdGetTimerCount:
-            handleGetTimerCount();
-            break;
-
         case cmdDebug:
             handleDebug();
             break;
 
         default:
-            Serial << "unknown command" << endl;
+            dprint.addIntItem("status", rspError);
+            dprint.addStrItem("errMsg", "unknown command");
            break;
     }              
     dprint.stop();
@@ -337,10 +322,8 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("getMaxSeparation", cmdGetMaxSeparation);
     dprint.addIntItem("getPosition", cmdGetPosition);
     dprint.addIntItem("getAxisPosition", cmdGetAxisPosition);
-    dprint.addIntItem("setMaxSpeed", cmdSetMaxSpeed);      
-    dprint.addIntItem("getMaxSpeed", cmdGetMaxSpeed);      
-    dprint.addIntItem("setAcceleration", cmdSetAcceleration);  
-    dprint.addIntItem("getAcceleration", cmdGetAcceleration); 
+    dprint.addIntItem("setSpeed", cmdSetSpeed);      
+    dprint.addIntItem("getSpeed", cmdGetSpeed);      
     dprint.addIntItem("setOrientation", cmdSetOrientation);
     dprint.addIntItem("getOrientation", cmdGetOrientation);
     dprint.addIntItem("setAxisOrientation", cmdSetAxisOrientation);
@@ -351,7 +334,6 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("getSerialNumber", cmdGetSerialNumber);
     dprint.addIntItem("getModelNumber", cmdGetModelNumber);
     // DEVELOPMENT
-    dprint.addIntItem("getTimerCount", cmdGetTimerCount);
     dprint.addIntItem("cmdDebug", cmdDebug);
 } 
 
@@ -511,28 +493,16 @@ void MessageHandler::handleGetMaxSeparation() {
     }
 }
 
-void MessageHandler::handleSetMaxSpeed() {
+void MessageHandler::handleSetSpeed() {
     if (!checkNumberOfArgs(2)) {return;}
     float maxSpeed = readFloat(1);
-    systemCmdRsp(systemState.setMaxSpeed(maxSpeed));
+    systemCmdRsp(systemState.setSpeed(maxSpeed));
 }
 
-void MessageHandler::handleGetMaxSpeed() {
-    float maxSpeed = systemState.getMaxSpeed();
+void MessageHandler::handleGetSpeed() {
+    float maxSpeed = systemState.getSpeed();
     dprint.addIntItem("status", rspSuccess);
     dprint.addFltItem("maxSpeed", maxSpeed);
-}
-
-void MessageHandler::handleSetAcceleration() {
-    if (!checkNumberOfArgs(2)) {return;}
-    float a = readFloat(1);
-    systemCmdRsp(systemState.setAcceleration(a));
-}
-
-void MessageHandler::handleGetAcceleration() {
-    float a = systemState.getAcceleration();
-    dprint.addIntItem("status", rspSuccess);
-    dprint.addIntItem("acceleration", a);
 }
 
 void MessageHandler::handleIsInHomePosition() {
@@ -613,16 +583,6 @@ void MessageHandler::handleGetModelNumber() {
 
 // -------------------------------------------------
 
-
-// DEVELOPMENT
-void MessageHandler::handleGetTimerCount() {
-    long timerCount;
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {  
-        timerCount = systemState.timerCount;
-    }
-    dprint.addIntItem("status", rspSuccess);
-    dprint.addLongItem("timerCount", timerCount);
-}
 
 void MessageHandler::handleDebug() {
     char name[20];

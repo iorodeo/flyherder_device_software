@@ -14,8 +14,7 @@ namespace constants {
     const float stepsPerRev = 2000;
     const float threadLead = 0.75*25.4;       // (mm)
     const float maxSeparationDefault = 100;   // (mm)
-    const float maxSpeedDefault = 10.0;       // (mm/s)
-    const float accelerationDefault = 5.0;    // (mm/s**2)
+    const float speedDefault = 10.0;          // (mm/s)
     const float stepsPerMMDefault = stepsPerRev/threadLead;  
 
     // Orientation 
@@ -25,7 +24,6 @@ namespace constants {
     const char orientationInverted = '-';
 
     // Stepper params and pin assignment
-    const int stepperMode = 1;
     const int ledStatusPin = 6;
     const int drivePowerPin = 7;
     const int driveDisablePin = 5;

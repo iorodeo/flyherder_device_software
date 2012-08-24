@@ -15,14 +15,12 @@ namespace constants {
     extern const float stepsPerRev;
     extern const float threadLead; 
     extern const float maxSeparationDefault;
-    extern const float maxSpeedDefault; 
-    extern const float accelerationDefault;
+    extern const float speedDefault; 
     extern const float stepsPerMMDefault;
     extern const char allowedOrientation[numOrientation];
     extern const char orientationDefault;
     extern const char orientationNormal;
     extern const char orientationInverted;
-    extern const int stepperMode;
     extern const int ledStatusPin;
     extern const int driveDisablePin;
     extern const int drivePowerPin;

@@ -10,6 +10,8 @@ class StepperMotor : public AccelStepper {
         StepperMotor(int mode, int stepPin, int dirPin, int homePin);
         ~StepperMotor();
         void initialize();
+        void stop();
+        void start();
         void setDirInverted();
         void setDirNormal();
         bool isRunning();

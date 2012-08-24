@@ -1,6 +1,6 @@
 #ifndef _MOTOR_DRIVE_H_
 #define _MOTOR_DRIVE_H_
-#include "StepperMotor.h"
+#include "Stepper.h"
 #include "Array.h"
 #include "constants.h"
 
@@ -26,27 +26,19 @@ class MotorDrive {
         void stopAll();
         void startAll();
 
-        void setMaxSpeed(unsigned int i, float v);
-        void setMaxSpeedAll(float v);
-
-        void setAcceleration(unsigned int i, float a);
-        void setAccelerationAll(float a);
+        void setSpeed(unsigned int v);
 
         void setDirection(unsigned int i, char dir);
         void setDirectionAll(Array<char,constants::numAxis> dir);
 
-        void setTargetPosAbs(unsigned int i, long posAbs);
-        void setTargetPosRel(unsigned int i, long posRel);
-        void setTargetPosAbsAll(Array<long,constants::numAxis> posAbs);
-        void setTargetPosRelAll(Array<long,constants::numAxis> posRel);
+        void setTargetPosition(unsigned int i, long pos);
+        void setTargetPositionAll(Array<long,constants::numAxis> pos);
 
-        void computeNewSpeeds();
-
-        long currentPosition(unsigned int i);
-        Array<long, constants::numAxis> currentPositionAll();
+        long getCurrentPosition(unsigned int i);
+        Array<long, constants::numAxis> getCurrentPositionAll();
 
     //private:
-        Array<StepperMotor,constants::numAxis> _stepper;
+        Array<Stepper,constants::numAxis> _stepper;
         int _powerPin;
         int _disablePin;
         int _faultPin;

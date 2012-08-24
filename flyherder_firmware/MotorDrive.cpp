@@ -1,3 +1,5 @@
+#include <util/atomic.h>
+#include <TimerOne.h>
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -21,6 +23,7 @@ MotorDrive::MotorDrive(int powerPin, int disablePin, int faultPin) {
 }
 
 void MotorDrive::initialize() {
+    unsigned int speedInSteps;
     // Set pin modes for drive control pins
     pinMode(_powerPin, OUTPUT);
     pinMode(_disablePin, OUTPUT);
@@ -31,23 +34,17 @@ void MotorDrive::initialize() {
     // Assign pins (step, dir, home) to motors
     for (int i=0; i<constants::numAxis; i++) {
         _stepper[i].disableOutputs();
-        _stepper[i] = StepperMotor(
-                constants::stepperMode,
+        _stepper[i] = Stepper(
                 constants::stepPinArray[i],
                 constants::dirPinArray[i],
                 constants::homePinArray[i]
                 );
         _stepper[i].initialize();
-        _stepper[i].run();
     }
-}
 
-void MotorDrive::update() {
-    if (isPowerOn() && isEnabled()) {
-        for (int i=0; i<constants::numAxis; i++) {
-            _stepper[i].update();
-        }
-    }
+    // Initialize timer and set default speed
+    speedInSteps = (unsigned int)(constants::speedDefault*constants::stepsPerMMDefault);  
+    setSpeed(speedInSteps); 
 }
 
 void MotorDrive::enable() {
@@ -64,25 +61,33 @@ void MotorDrive::disable() {
 
 void MotorDrive::stop(unsigned int i) {
     if (i<constants::numAxis) {
-        _stepper[i].stop();
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            _stepper[i].stop();
+        } 
     }
 }
 
 void MotorDrive::start(unsigned int i) {
     if (i<constants::numAxis) {
-        _stepper[i].start();
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            _stepper[i].start();
+        }
     }
 }
 
 void MotorDrive::stopAll() {
-    for (int i=0; i<constants::numAxis; i++) {
-        stop(i);
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        for (int i=0; i<constants::numAxis; i++) {
+            _stepper[i].stop();
+        }
     }
 }
 
 void MotorDrive::startAll() {
-    for (int i=0; i<constants::numAxis; i++) {
-        start(i);
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        for (int i=0; i<constants::numAxis; i++) {
+            _stepper[i].start();
+        }
     }
 }
 
@@ -114,28 +119,9 @@ void MotorDrive::setPowerOff() {
     disable();
 }
 
-void MotorDrive::setMaxSpeed(unsigned int i, float v) {
-    if (i < constants::numAxis) {
-        _stepper[i].setMaxSpeed((unsigned int) v);
-    }
-}
-
-void MotorDrive::setMaxSpeedAll(float v) {
-    for (int i=0; i<constants::numAxis; i++) {
-        setMaxSpeed(i,v);
-    }
-}
-
-void MotorDrive::setAcceleration(unsigned int i, float a) {
-    if (i < constants::numAxis) {
-        _stepper[i].setAcceleration((unsigned int) a);
-    }
-}
-
-void MotorDrive::setAccelerationAll(float a) {
-    for (int i=0; i<constants::numAxis; i++) {
-        setAcceleration(i,a);
-    }
+void MotorDrive::setSpeed(unsigned int v) {
+    long period = 1000000/v;
+    Timer1.setPeriod(period);
 }
 
 void MotorDrive::setDirection(unsigned int i, char dir) {
@@ -154,49 +140,51 @@ void MotorDrive::setDirectionAll(Array<char,constants::numAxis> dir) {
     }
 }
 
-Array<long, constants::numAxis> MotorDrive::currentPositionAll() {
+Array<long, constants::numAxis> MotorDrive::getCurrentPositionAll() {
     Array<long, constants::numAxis> position;
     for (int i=0; i<constants::numAxis; i++) {
-        position[i] = _stepper[i].currentPosition();
+        position[i] = _stepper[i].getCurrentPosition();
     }
     return position;
 }
 
-long MotorDrive::currentPosition(unsigned int i) {
+long MotorDrive::getCurrentPosition(unsigned int i) {
     long rtnVal = 0;
     if (i < constants::numAxis) {
-        rtnVal = _stepper[i].currentPosition();
+        rtnVal = _stepper[i].getCurrentPosition();
     }
     return rtnVal;
 }
 
-void MotorDrive::setTargetPosAbs(unsigned int i, long posAbs) {
+void MotorDrive::setTargetPosition(unsigned int i, long pos) {
     if (i < constants::numAxis) {
-        _stepper[i].moveTo(posAbs);
-        _stepper[i].computeNewSpeed();
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+            _stepper[i].setTargetPosition(pos);
+        }
     }
 }
 
-void MotorDrive::setTargetPosRel(unsigned int i, long posRel) {
-    if (i < constants::numAxis) {
-        _stepper[i].move(posRel);
+void MotorDrive::setTargetPositionAll(Array<long,constants::numAxis> pos) {
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        for (int i=0; i<constants::numAxis; i++) {
+            setTargetPosition(i,pos[i]);
+        }
     }
 }
 
-void MotorDrive::setTargetPosAbsAll(Array<long,constants::numAxis> posAbs) {
-    for (int i=0; i<constants::numAxis; i++) {
-        setTargetPosAbs(i,posAbs[i]);
+void MotorDrive::update() {
+    if (_enabledFlag && _powerOnFlag) {
+        for (int i=0; i<constants::numAxis; i++) {
+            _stepper[i].updateDirPin();
+            _stepper[i].setStepPinHigh();
+        }
+        delayMicroseconds(1);
+        for (int i=0; i<constants::numAxis; i++) {
+            _stepper[i].setStepPinLow();
+        }
     }
 }
 
-void MotorDrive::setTargetPosRelAll(Array<long,constants::numAxis> posRel) {
-    for (int i=0; i<constants::numAxis; i++) {
-        setTargetPosRel(i,posRel[i]);
-    }
-}
+// ----------------------------------------------------------------------
 
-void MotorDrive::computeNewSpeeds() {
-    for (int i=0; i<constants::numAxis; i++) {
-        _stepper[i].computeNewSpeed();
-    }
-}
+

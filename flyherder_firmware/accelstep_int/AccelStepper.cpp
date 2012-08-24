@@ -16,6 +16,8 @@ void AccelStepper::move(long relative)
     moveTo(_currentPos + relative);
 }
 
+
+
 // Implements steps according to the current speed
 // You must call this at least once per step
 // returns true if a step occurred
@@ -148,29 +150,29 @@ int AccelStepper::desiredSpeed()
 // returns true if we are still running to position
 boolean AccelStepper::run()
 {
-    if (_targetPos == _currentPos) {
-        return false;
-    }
-    
-    //////////////////////////////////////////////////////
-    //// WBD
-    //////////////////////////////////////////////////////
     //if (_targetPos == _currentPos) {
-    //    setSpeed(0);
     //    return false;
     //}
-    //else if (_targetPos > _currentPos) {
-    //    setSpeed(_maxSpeed);
-    //}
-    //else {
-    //    setSpeed(-_maxSpeed);
-    //}
-    //runSpeed();
-    //////////////////////////////////////////////////////
-
-    if (runSpeed()) {
-        computeNewSpeed();
+    
+    ////////////////////////////////////////////////////
+    // WBD
+    ////////////////////////////////////////////////////
+    if (_targetPos == _currentPos) {
+        setSpeed(0);
+        return false;
     }
+    else if (_targetPos > _currentPos) {
+        setSpeed(_maxSpeed);
+    }
+    else {
+        setSpeed(-_maxSpeed);
+    }
+    runSpeed();
+    ////////////////////////////////////////////////////
+
+    //if (runSpeed()) {
+    //    computeNewSpeed();
+    //}
     return true;
 }
 

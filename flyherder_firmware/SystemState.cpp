@@ -1,23 +1,19 @@
-#if defined(ARDUINO) && ARDUINO >= 100
+#if defined(ARDUINO) && ARDUINO >= 100 
 #include "Arduino.h"
 #else
 #include "WProgram.h"
 #endif
-#include <util/atomic.h>
 #include <TimerOne.h>
-#include "SystemState.h"
 #include "string.h"
+#include "SystemState.h"
 
 SystemState::SystemState() {
     setErrMsg("");
-    // DEVELOPMENT
-    timerCount=0;
 }
 
 void SystemState::initialize() {
-    // Turn on status LED
-    pinMode(constants::ledStatusPin, OUTPUT);
-    setLEDStatusPinOn();
+    Timer1.initialize(1000); // Dummpy period
+    Timer1.attachInterrupt(timerUpdate);
 
     // Initialize motor drive
     motorDrive.initialize();
@@ -25,20 +21,20 @@ void SystemState::initialize() {
     disable();
 
     setStepsPerMMToDefault();
-    setMaxSpeedToDefault();
-    setAccelerationToDefault();
     setMaxSeparationToDefault();
     setOrientationToDefault();
 
-    // Setup system state update timer
-    Timer1.initialize(constants::timerPeriod_us);
-    Timer1.attachInterrupt(timerUpdate);
     Timer1.start();
+    setLedStatusOn();
 }
 
-void SystemState::update() {
-    motorDrive.update();
-    timerCount++;
+void SystemState::setLedStatusOn() {
+    pinMode(constants::ledStatusPin,OUTPUT);
+    digitalWrite(constants::ledStatusPin,HIGH);
+}
+
+void SystemState::setLedStatusOff() {
+    digitalWrite(constants::ledStatusPin,LOW);
 }
 
 void SystemState::setDrivePowerOn() {
@@ -79,7 +75,7 @@ bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
     for (int i=0; i<constants::numAxis; i++) {
         posStep[i] = (long)(_stepsPerMM*posMM[i]);
     }
-    motorDrive.setTargetPosAbsAll(posStep);
+    motorDrive.setTargetPositionAll(posStep);
     motorDrive.startAll();
     return true;
 }
@@ -87,7 +83,7 @@ bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
 bool SystemState::moveAxisToPosition(int axis, float posMM) {
     long posStep = (long)(_stepsPerMM*posMM);
     if (!checkAxisArg(axis))  {return false;}
-    motorDrive.setTargetPosAbs(axis,posStep);
+    motorDrive.setTargetPosition(axis,posStep);
     motorDrive.start(axis);
     return true;
 }
@@ -101,7 +97,7 @@ bool SystemState::moveToHome() {
 Array<float,constants::numAxis> SystemState::getPosition() {
     Array<long, constants::numAxis> posSteps;
     Array<float,constants::numAxis> posMM;
-    posSteps = motorDrive.currentPositionAll();
+    posSteps = motorDrive.getCurrentPositionAll();
     for (int i=0; i<constants::numAxis; i++) {
         posMM[i] = ((float) posSteps[i])/_stepsPerMM;
     }
@@ -110,7 +106,7 @@ Array<float,constants::numAxis> SystemState::getPosition() {
 
 float SystemState::getAxisPosition(int axis) {
     if (!checkAxisArg(axis)) {return 0.0;};
-    return motorDrive.currentPosition(axis);
+    return motorDrive.getCurrentPosition(axis);
 }
 
 void SystemState::setMaxSeparationToDefault() { 
@@ -136,35 +132,19 @@ Array<float,constants::numDim> SystemState::getMaxSeparation() {
     return _maxSeparation;
 }
 
-void SystemState::setMaxSpeedToDefault() {
-    setMaxSpeed(constants::maxSpeedDefault);
-}
-
-bool SystemState::setMaxSpeed(float v) {
-    motorDrive.setMaxSpeedAll(_stepsPerMM*v);
-    _maxSpeed = v;
+bool SystemState::setSpeed(float v) {
+    unsigned int vSteps = (unsigned int)(_stepsPerMM*v);
+    motorDrive.setSpeed(vSteps);
+    _speed = v;
     return true;
 }
 
-float SystemState::getMaxSpeed() {
-    return _maxSpeed;
-}
-
-void SystemState::setAccelerationToDefault() {
-    setAcceleration(constants::accelerationDefault);
-}
-
-bool SystemState::setAcceleration(float a) {
-    motorDrive.setAccelerationAll(_stepsPerMM*a);
-    _acceleration = a;
-    return true;
-}
-
-float SystemState::getAcceleration() {
-    return _acceleration;
+float SystemState::getSpeed() {
+    return _speed;
 }
 
 bool SystemState::isInHomePosition() {
+    // NOT DONE
     bool rtnVal = false;
     if (~isRunning()) {
     }
@@ -228,17 +208,6 @@ float SystemState::getStepsPerMM() {
     return _stepsPerMM;
 }
 
-void SystemState::setLEDStatusPinOn() {
-    digitalWrite(constants::ledStatusPin,HIGH);
-}
-
-void SystemState::setLEDStatusPinOff() {
-    digitalWrite(constants::ledStatusPin,LOW);
-}
-
-void SystemState::computeNewMotorSpeeds() {
-    motorDrive.computeNewSpeeds();
-}
 
 void SystemState::setErrMsg(char *msg) {
     strncpy(errMsg,msg,SYS_ERR_BUF_SZ);
@@ -254,10 +223,8 @@ bool SystemState::checkAxisArg(int axis) {
     }
 }
 
-// ----------------------------------------------------------------------
-
 void timerUpdate() {
-    systemState.update();
+    systemState.motorDrive.update();
 }
 
 SystemState systemState;

@@ -6,7 +6,6 @@ namespace constants {
     enum {numAxis=2*numDim};    
     enum {nameSize=3};
     enum {numOrientation=2};
-    extern const long timerPeriod_us;
     extern const unsigned int baudrate;
     extern const unsigned int deviceModelNumber;
     extern const unsigned int deviceSerialNumber; 
@@ -16,7 +15,10 @@ namespace constants {
     extern const float threadLead; 
     extern const float maxSeparationDefault;
     extern const float speedDefault; 
+    extern const float minSpeed;
+    extern const float maxSpeed;
     extern const float stepsPerMMDefault;
+    extern const float homeSearchDistScaleFact;
     extern const char allowedOrientation[numOrientation];
     extern const char orientationDefault;
     extern const char orientationNormal;
@@ -28,5 +30,6 @@ namespace constants {
     extern const int stepPinArray[numAxis];
     extern const int dirPinArray[numAxis];
     extern const int homePinArray[numAxis];
+    extern const int homeInterruptArray[numAxis];
 }
 #endif

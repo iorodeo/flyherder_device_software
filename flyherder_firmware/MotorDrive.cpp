@@ -7,6 +7,7 @@
 #endif
 #include "MotorDrive.h"
 
+
 MotorDrive::MotorDrive() 
 {
     _powerPin = constants::drivePowerPin;
@@ -91,6 +92,22 @@ void MotorDrive::startAll() {
     }
 }
 
+void MotorDrive::home(unsigned int i) {
+    if (i < constants::numAxis) {
+        ATOMIC_BLOCK(ATOMIC_RESTORESTATE) { 
+            _stepper[i].home(); 
+        }
+    }
+}
+
+void MotorDrive::homeAll() {
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        for (int i=0; i<constants::numAxis; i++) {
+            _stepper[i].home();
+        }
+    }
+}
+
 bool MotorDrive::isPowerOn() {
     return _powerOnFlag;
 }
@@ -167,24 +184,102 @@ void MotorDrive::setTargetPosition(unsigned int i, long pos) {
 void MotorDrive::setTargetPositionAll(Array<long,constants::numAxis> pos) {
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         for (int i=0; i<constants::numAxis; i++) {
-            setTargetPosition(i,pos[i]);
+            _stepper[i].setTargetPosition(pos[i]);
         }
     }
 }
 
-void MotorDrive::update() {
+void MotorDrive::setHomePosition(unsigned int i, long pos) {
+    if (i < constants::numAxis) {
+        _stepper[i].setHomePosition(pos);
+    }
+}
+
+void MotorDrive::setHomePositionAll(Array<long, constants::numAxis> pos) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setHomePosition(i,pos[i]);
+    }
+}
+    
+long MotorDrive::getHomePosition(unsigned int i) {
+    if (i < constants::numAxis) {
+        return _stepper[i].getHomePosition();
+    }
+    else {
+        return 0;
+    }
+}
+
+Array<long, constants::numAxis> MotorDrive::getHomePositionAll() {
+    Array<long, constants::numAxis> pos;
+    for (int i=0; i<constants::numAxis; i++) {
+        pos[i] = getHomePosition(i);
+    }
+    return pos;
+}
+
+void MotorDrive::setHomeSearchDir(unsigned int i, char dir) {
+    if (i < constants::numAxis)  {
+        _stepper[i].setHomeSearchDir(dir);
+    }
+}
+
+void MotorDrive::setHomeSearchDirAll(Array<char, constants::numAxis> dir) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setHomeSearchDir(i,dir[i]);
+    }
+}
+
+char MotorDrive::getHomeSearchDir(unsigned int i) {
+    if (i<constants::numAxis) {
+        return _stepper[i].getHomeSearchDir();
+    }
+    else {
+        return ' ';
+    }
+}
+
+Array<char, constants::numAxis> MotorDrive::getHomeSearchDir() {
+    Array<char, constants::numAxis> dir;
+    for (int i=0; i<constants::numAxis; i++) {
+        dir[i] = getHomeSearchDir(i); 
+    }
+}
+
+void MotorDrive::setHomeSearchDist(unsigned int i, long dist) {
+    if (i < constants::numAxis) {
+        _stepper[i].setHomeSearchDist(dist);
+    }
+}
+
+void MotorDrive::setHomeSearchDistAll(Array<long, constants::numAxis> dist) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setHomeSearchDist(i,dist[i]);
+    }
+}
+
+long MotorDrive::getHomeSearchDist(unsigned int i) {
+    if (i < constants::numAxis) {
+        return _stepper[i].getHomeSearchDist();
+    }
+    else {
+        return 0;
+    }
+}
+
+Array<long, constants::numAxis> MotorDrive::getHomeSearchDist() {
+    Array<long, constants::numAxis> dist;
+    for (int i=0; i<constants::numAxis; i++) {
+        dist[i] = getHomeSearchDist(i);
+    }
+}
+
+void MotorDrive::homeAction(unsigned int i) {
     if (_enabledFlag && _powerOnFlag) {
-        for (int i=0; i<constants::numAxis; i++) {
-            _stepper[i].updateDirPin();
-            _stepper[i].setStepPinHigh();
-        }
-        delayMicroseconds(1);
-        for (int i=0; i<constants::numAxis; i++) {
-            _stepper[i].setStepPinLow();
+        if (i < constants::numAxis) {
+            _stepper[i].homeAction();
         }
     }
 }
-
-// ----------------------------------------------------------------------
 
 

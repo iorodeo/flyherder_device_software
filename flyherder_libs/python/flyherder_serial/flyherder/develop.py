@@ -21,30 +21,63 @@ if 0:
         pos = dev.getAxisPosition(name)
         print(name, pos)
 
-if 1:
+if 0:
     print(dev.getPosition())
-    dev.setSpeed(70.0)
+    dev.setSpeed(100.0)
     dev.setOrientation('+','+','+','+')
     #dev.setOrientation('-','-','-','-')
     print(dev.getOrientation())
     dev.setDrivePowerOn()
+    time.sleep(1.0) # Required
     dev.enable()
-    time.sleep(2.0)
 
-    pos_list = [100,0,100,0,100,0]
+    #pos_list = [10,]
+    pos_list = [50,0]
     for pos in pos_list:
         print('move to pos', pos)
-        dev.moveToPosition(pos,pos,pos,pos)
+        #dev.moveToPosition(pos,pos,pos,pos)
         #dev.setAxisOrientation('x0','-')
-        #dev.moveAxisToPosition('x0',pos)
-        while 1: 
-            if not dev.isRunning():
-                break
+        dev.moveAxisToPosition('x0',pos)
+        while dev.isRunning(): 
             time.sleep(0.2)
-        time.sleep(1.0)
+        time.sleep(5.0)
     print(dev.getPosition())
     dev.disable()
     dev.setDrivePowerOff()
+
+if 0:
+    dev.setOrientation('+','+','+','+')
+    #dev.setOrientation('-','-','-','-')
+    dev.setSpeed(100.0)
+    dev.setDrivePowerOn()
+    time.sleep(1.0) # Required
+    dev.enable()
+
+    dev.moveAxisToHome('x0')
+    while dev.isRunning():
+        time.sleep(0.5)
+        print('sleeping')
+    dev.disable()
+    dev.setDrivePowerOff()
+
+if 1:
+    print(dev.getPosition())
+    dev.setSpeed(100.0)
+    dev.setOrientation('+','+','+','+')
+    dev.setDrivePowerOn()
+    time.sleep(1.0) # Required
+    dev.enable()
+    pos_list = [50,0]
+    for pos in pos_list:
+        dev.moveAxisToPosition('x0',pos)
+        while dev.isRunning():
+            time.sleep(0.5)
+        print(dev.getPosition())
+        time.sleep(5.0)
+    dev.disable()
+    dev.setDrivePowerOff()
+    print(dev.getPosition())
+
 
 
 

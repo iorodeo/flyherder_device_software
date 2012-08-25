@@ -11,6 +11,7 @@ class SystemState {
     public:
         SystemState();
         void initialize();
+        void setupHoming();
 
         void setDrivePowerOn();
         void setDrivePowerOff();
@@ -26,6 +27,7 @@ class SystemState {
         bool moveToPosition(Array<float,constants::numAxis> posMM);
         bool moveAxisToPosition(int axis, float posMM);
         bool moveToHome();
+        bool moveAxisToHome(int axis);
 
         Array<float,constants::numAxis> getPosition();
         float getAxisPosition(int axis);
@@ -33,6 +35,7 @@ class SystemState {
         void setMaxSeparationToDefault();
         bool setMaxSeparation(Array<float,constants::numDim> maxSeparation);
         Array<float,constants::numDim> getMaxSeparation();
+        float getMaxSeparation(unsigned int dim);
 
         bool setSpeed(float v);
         float getSpeed();
@@ -56,6 +59,9 @@ class SystemState {
         void setErrMsg(char *);
         char errMsg[SYS_ERR_BUF_SZ];
 
+        long convertMMToSteps(float x);
+        float convertStepsToMM(long x);
+
     //private:
 
         bool checkAxisArg(int axis);
@@ -69,5 +75,29 @@ class SystemState {
 };
 
 extern SystemState systemState;
-void timerUpdate();
+
+inline void X0HomeFcn() {
+    systemState.motorDrive.homeAction(0);
+    detachInterrupt(constants::homeInterruptArray[0]);
+}
+
+inline void Y0HomeFcn() {
+    systemState.motorDrive.homeAction(1);
+    detachInterrupt(constants::homeInterruptArray[1]);
+}
+
+inline void X1HomeFcn() {
+    systemState.motorDrive.homeAction(2);
+    detachInterrupt(constants::homeInterruptArray[2]);
+}
+
+inline void Y1HomeFcn() {
+    systemState.motorDrive.homeAction(3);
+    detachInterrupt(constants::homeInterruptArray[3]);
+}
+
+inline void timerUpdate() {
+    systemState.motorDrive.update();
+}
+
 #endif

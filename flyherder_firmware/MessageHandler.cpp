@@ -30,6 +30,7 @@ enum {
     cmdMoveToPosition,         // Done * 
     cmdMoveAxisToPosition,     // Done *
     cmdMoveToHome,             // Done * 
+    cmdMoveAxisToHome,         // 
     cmdIsInHomePosition,       // Done *
 
     cmdGetPosition,            // Done *
@@ -166,6 +167,10 @@ void MessageHandler::msgSwitchYard() {
 
         case cmdMoveToHome:
             handleMoveToHome();
+            break;
+
+        case cmdMoveAxisToHome:
+            handleMoveAxisToHome();
             break;
 
         case cmdGetPosition:
@@ -317,6 +322,7 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("moveToPosition", cmdMoveToPosition);        
     dprint.addIntItem("moveAxisToPosition", cmdMoveAxisToPosition);
     dprint.addIntItem("moveToHome", cmdMoveToHome);     
+    dprint.addIntItem("moveAxisToHome", cmdMoveAxisToHome);
     dprint.addIntItem("isInHomePosition", cmdIsInHomePosition);   
     dprint.addIntItem("setMaxSeparation", cmdSetMaxSeparation);
     dprint.addIntItem("getMaxSeparation", cmdGetMaxSeparation);
@@ -452,6 +458,15 @@ void MessageHandler::handleMoveAxisToPosition() {
 
 void MessageHandler::handleMoveToHome() {
     systemCmdRsp(systemState.moveToHome());
+}
+
+void MessageHandler::handleMoveAxisToHome() {
+    char axisName[constants::nameSize];
+    int axisNumber;
+    if (!checkNumberOfArgs(2)) {return;}
+    copyString(1,axisName,constants::nameSize);
+    if (!getAxisNumberFromName(axisName,axisNumber)) {return;}
+    systemCmdRsp(systemState.moveAxisToHome(axisNumber));
 }
 
 void MessageHandler::handleGetPosition() {

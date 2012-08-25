@@ -7,15 +7,23 @@
 #include "string.h"
 #include "SystemState.h"
 
+// Homing function interrupt table
+void (*homeFcnTable[constants::numAxis])(void) = {
+        X0HomeFcn, 
+        Y0HomeFcn, 
+        X1HomeFcn, 
+        Y1HomeFcn
+        };
+
 SystemState::SystemState() {
     setErrMsg("");
 }
 
 void SystemState::initialize() {
+
     Timer1.initialize(1000); // Dummpy period
     Timer1.attachInterrupt(timerUpdate);
 
-    // Initialize motor drive
     motorDrive.initialize();
     setDrivePowerOff();
     disable();
@@ -23,9 +31,37 @@ void SystemState::initialize() {
     setStepsPerMMToDefault();
     setMaxSeparationToDefault();
     setOrientationToDefault();
+    setupHoming();
 
     Timer1.start();
     setLedStatusOn();
+}
+
+void SystemState::setupHoming() {
+    char homeSearchDir;
+    float axisSepMM;
+    float homePosMM;
+    float homeSearchDistMM;
+    long homePosSteps;
+    long homeSearchDistSteps;
+    for (int i=0; i<constants::numAxis; i++) {
+        axisSepMM = getMaxSeparation(i%constants::numDim);
+        if (i < constants::numDim) {
+            homePosMM = 0.0;
+            homeSearchDir = '-';
+        }
+        else {
+            homePosMM = axisSepMM;
+            homeSearchDir = '+';
+        }
+        homeSearchDistMM = constants::homeSearchDistScaleFact*axisSepMM;
+        homePosSteps = systemState.convertMMToSteps(homePosMM);
+        homeSearchDistSteps = systemState.convertMMToSteps(homeSearchDistMM);
+
+        motorDrive.setHomeSearchDir(i, homeSearchDir);
+        motorDrive.setHomePosition(i, homePosSteps);
+        motorDrive.setHomeSearchDist(i, homeSearchDistSteps);
+    }
 }
 
 void SystemState::setLedStatusOn() {
@@ -73,7 +109,7 @@ bool SystemState::isRunning() {
 bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
     Array<long,constants::numAxis> posStep;
     for (int i=0; i<constants::numAxis; i++) {
-        posStep[i] = (long)(_stepsPerMM*posMM[i]);
+        posStep[i] = systemState.convertMMToSteps(posMM[i]);
     }
     motorDrive.setTargetPositionAll(posStep);
     motorDrive.startAll();
@@ -81,7 +117,7 @@ bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
 }
 
 bool SystemState::moveAxisToPosition(int axis, float posMM) {
-    long posStep = (long)(_stepsPerMM*posMM);
+    long posStep = systemState.convertMMToSteps(posMM);
     if (!checkAxisArg(axis))  {return false;}
     motorDrive.setTargetPosition(axis,posStep);
     motorDrive.start(axis);
@@ -90,7 +126,17 @@ bool SystemState::moveAxisToPosition(int axis, float posMM) {
 
 
 bool SystemState::moveToHome() {
-    // NOT DONE
+    for (int i=0; i<constants::numAxis; i++) {
+        attachInterrupt(constants::homeInterruptArray[i], homeFcnTable[i], FALLING);
+    }
+    motorDrive.homeAll();
+    return true;
+}
+
+bool SystemState::moveAxisToHome(int axis) {
+    if (!checkAxisArg(axis)) {return false;}
+    attachInterrupt(constants::homeInterruptArray[axis], homeFcnTable[axis], FALLING);
+    motorDrive.home(axis);
     return true;
 }
 
@@ -99,7 +145,7 @@ Array<float,constants::numAxis> SystemState::getPosition() {
     Array<float,constants::numAxis> posMM;
     posSteps = motorDrive.getCurrentPositionAll();
     for (int i=0; i<constants::numAxis; i++) {
-        posMM[i] = ((float) posSteps[i])/_stepsPerMM;
+        posMM[i] = systemState.convertStepsToMM(posSteps[i]);
     }
     return posMM;
 }
@@ -132,8 +178,25 @@ Array<float,constants::numDim> SystemState::getMaxSeparation() {
     return _maxSeparation;
 }
 
+float SystemState::getMaxSeparation(unsigned int dim) {
+    if (dim < constants::numDim) {
+        return _maxSeparation[dim];
+    }
+    else {
+        return 0.0;
+    }
+}
+
 bool SystemState::setSpeed(float v) {
-    unsigned int vSteps = (unsigned int)(_stepsPerMM*v);
+    if (v < constants::minSpeed) {
+        setErrMsg("speed <  min allowed value");
+        return false;
+    }
+    if (v > constants::maxSpeed) {
+        setErrMsg("speed > max allowed value");
+        return false;
+    }
+    unsigned int vSteps = (unsigned int) systemState.convertMMToSteps(v);
     motorDrive.setSpeed(vSteps);
     _speed = v;
     return true;
@@ -223,8 +286,15 @@ bool SystemState::checkAxisArg(int axis) {
     }
 }
 
-void timerUpdate() {
-    systemState.motorDrive.update();
+long SystemState::convertMMToSteps(float x) {
+    return (long)(_stepsPerMM*x);
 }
 
+float SystemState::convertStepsToMM(long x) {
+    return ((float)x)/_stepsPerMM;
+}
+
+
 SystemState systemState;
+
+

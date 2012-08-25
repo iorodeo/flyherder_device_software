@@ -1,8 +1,10 @@
 #include "Stepper.h"
+#include "Streaming.h"
 
 const uint8_t stepPinDefault = 2;
-const uint8_t dirPinDefault = 3;
+const uint8_t dirPinDefault  = 3;
 const uint8_t homePinDefault = 4;
+const long homeSearchDistDefault = 1000;
 
 Stepper::Stepper() {
     Stepper(stepPinDefault, dirPinDefault, homePinDefault);
@@ -16,9 +18,14 @@ Stepper::Stepper(uint8_t stepPin, uint8_t dirPin, uint8_t homePin) {
     _dirInverted = false;
     _stepInverted = false;
 
+    _homeSearchDir = '+';
+    _homeSearchDist = labs(homeSearchDistDefault);
+
     _running = false;
+    _homing = false;
     _currentPos = 0;
     _targetPos = 0;
+    _homePos = 0;
 }
 
 Stepper::~Stepper() {
@@ -26,17 +33,42 @@ Stepper::~Stepper() {
 }
 
 void Stepper::initialize() {
+
     pinMode(_homePin, INPUT);
+    digitalWrite(_homePin, HIGH);
     enableOutputs();
     setPinsInverted(false,false);
+
+    _stepBitMask = digitalPinToBitMask(_stepPin);
+    _stepPort = digitalPinToPort(_stepPin);
+    _stepPortReg = portOutputRegister(_stepPort);
+
+    _dirBitMask = digitalPinToBitMask(_dirPin);
+    _dirPort = digitalPinToPort(_dirPin);
+    _dirPortReg = portOutputRegister(_dirPort);
+
 }
 
 void Stepper::start() {
+    // Should be called in an atomic block
     _running = true;
 }
 
 void Stepper::stop() {
+    // Should be called in an atomic block
     _running = false;
+}
+
+void Stepper::home() {
+    // Should be called in an atomic block
+    if (_homeSearchDir == '+') {
+        _targetPos = _currentPos + labs(_homeSearchDist);
+    }
+    else {
+        _targetPos = _currentPos - labs(_homeSearchDist);
+    }
+    _homing = true;
+    _running = true;
 }
 
 bool Stepper::isRunning() {
@@ -56,7 +88,34 @@ long Stepper::getCurrentPosition() {
 }
 
 void Stepper::setCurrentPosition(long position) {
-    _targetPos = _currentPos = position;
+    _targetPos = position;
+    _currentPos = position;
+}
+
+void Stepper::setHomePosition(long position) {
+    _homePos = position;
+}
+
+long Stepper::getHomePosition() {
+    return _homePos;
+}
+
+void Stepper::setHomeSearchDir(char dir) {
+    if ((dir == '+') || (dir == '-')) {
+        _homeSearchDir = dir;
+    }
+}
+
+char Stepper::getHomeSearchDir() {
+    return _homeSearchDir;
+}
+
+void Stepper::setHomeSearchDist(long dist) {
+    _homeSearchDist = labs(dist);
+}
+
+long Stepper::getHomeSearchDist() {
+    return _homeSearchDist;
 }
 
 void Stepper::disableOutputs() {   
@@ -82,29 +141,11 @@ void Stepper::setDirNormal() {
     setPinsInverted(false,false);
 }
 
-void Stepper::updateDirPin() {
-    if (_running) {
-        if (_currentPos <= _targetPos) {
-            digitalWrite(_dirPin, HIGH ^ _dirInverted);
-            _currentPos += 1;
-        }
-        else if (_currentPos > _targetPos) {
-            digitalWrite(_dirPin, LOW ^ _dirInverted);
-            _currentPos -= 1;
-        }
-    }
-}
-
-void Stepper::setStepPinHigh() {
-    if (_running) {
-    digitalWrite(_stepPin, HIGH ^ _stepInverted);
-    }
-}
-
-void Stepper::setStepPinLow() {
-    digitalWrite(_stepPin, LOW ^ _stepInverted);
-    if (_currentPos == _targetPos) {
+void Stepper::homeAction() {
+    if (_homing) {
+        _homing = false;
         _running = false;
+        _currentPos = _homePos;
     }
 }
 

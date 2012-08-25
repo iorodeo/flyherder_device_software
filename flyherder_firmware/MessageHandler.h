@@ -40,6 +40,7 @@ class MessageHandler : public SerialReceiver {
         void handleMoveToPosition();
         void handleMoveAxisToPosition();
         void handleMoveToHome();
+        void handleMoveAxisToHome();
         void handleGetPosition();
         void handleGetAxisPosition();
         void handleSetMaxSeparation();

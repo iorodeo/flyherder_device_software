@@ -148,6 +148,9 @@ bool SystemState::isRunning() {
 
 bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
     Array<long,constants::numAxis> posStep;
+    if (_boundsCheck) {
+        if (!checkPosBounds(posMM)) {return false;}
+    }
     posStep = convertMMToSteps(posMM);
     motorDrive.setTargetPositionAll(posStep);
     motorDrive.startAll();
@@ -157,6 +160,11 @@ bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
 bool SystemState::moveAxisToPosition(int axis, float posMM) {
     long posStep = convertMMToSteps(posMM);
     if (!checkAxisArg(axis))  {return false;}
+    if (_boundsCheck) {
+        Array<float, constants::numAxis> newPosMM;
+       newPosMM[axis] = posMM;
+      if (!checkPosBounds(newPosMM)) {return false;} 
+    }
     motorDrive.setTargetPosition(axis,posStep);
     motorDrive.start(axis);
     return true;

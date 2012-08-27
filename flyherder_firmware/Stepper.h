@@ -53,7 +53,7 @@ class Stepper {
         void setStepPinLow();
         void homeAction();
 
-    //private:
+    private:
 
         uint8_t _stepPin; 
         uint8_t _dirPin; 

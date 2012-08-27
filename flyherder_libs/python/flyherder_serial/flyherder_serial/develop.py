@@ -1,6 +1,6 @@
 from __future__ import print_function
 import time
-from flyherder import FlyHerder
+from flyherder_serial import FlyHerder
 
 debug = False
 dev = FlyHerder(port='/dev/ttyUSB0',timeout=2.0,debug=debug)
@@ -21,7 +21,7 @@ if 0:
         pos = dev.getAxisPosition(name)
         print(name, pos)
 
-if 0:
+if 1:
     print(dev.getPosition())
     dev.setSpeed(100.0)
     dev.setOrientation('+','+','+','+')
@@ -29,20 +29,19 @@ if 0:
     print(dev.getOrientation())
     dev.setDrivePowerOn()
     time.sleep(1.0) # Required
-    dev.enable()
 
     #pos_list = [10,]
-    pos_list = [50,0]
-    for pos in pos_list:
-        print('move to pos', pos)
-        #dev.moveToPosition(pos,pos,pos,pos)
-        #dev.setAxisOrientation('x0','-')
-        dev.moveAxisToPosition('x0',pos)
+    pos_list = [
+            (30, 60, 90, 120), 
+            ( 0,  0,  0,   0), 
+            ]
+    for pos0, pos1, pos2, pos3 in pos_list:
+        print('move to pos', pos0, pos1, pos2, pos3)
+        dev.moveToPosition(pos0,pos1,pos2,pos3)
         while dev.isRunning(): 
             time.sleep(0.2)
-        time.sleep(5.0)
+        time.sleep(1.0)
     print(dev.getPosition())
-    dev.disable()
     dev.setDrivePowerOff()
 
 if 0:
@@ -51,22 +50,19 @@ if 0:
     dev.setSpeed(100.0)
     dev.setDrivePowerOn()
     time.sleep(1.0) # Required
-    dev.enable()
 
     dev.moveAxisToHome('x0')
     while dev.isRunning():
         time.sleep(0.5)
         print('sleeping')
-    dev.disable()
     dev.setDrivePowerOff()
 
-if 1:
+if 0:
     print(dev.getPosition())
     dev.setSpeed(100.0)
     dev.setOrientation('+','+','+','+')
     dev.setDrivePowerOn()
     time.sleep(1.0) # Required
-    dev.enable()
     pos_list = [50,0]
     for pos in pos_list:
         dev.moveAxisToPosition('x0',pos)
@@ -74,9 +70,17 @@ if 1:
             time.sleep(0.5)
         print(dev.getPosition())
         time.sleep(5.0)
-    dev.disable()
     dev.setDrivePowerOff()
     print(dev.getPosition())
+
+if 0:
+
+    print("turn on power")
+    dev.setDrivePowerOn()
+    for i in range(5):
+        time.sleep(1.0)
+        print('sleeping')
+    dev.setDrivePowerOff()
 
 
 

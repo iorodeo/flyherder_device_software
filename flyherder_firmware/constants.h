@@ -1,6 +1,8 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H_
 
+//#define HAVE_ENABLE
+
 namespace constants {
     enum {numDim=2};
     enum {numAxis=2*numDim};    
@@ -24,7 +26,9 @@ namespace constants {
     extern const char orientationNormal;
     extern const char orientationInverted;
     extern const int ledStatusPin;
+#ifdef HAVE_ENABLE
     extern const int driveDisablePin;
+#endif
     extern const int drivePowerPin;
     extern const int driveFaultPin;
     extern const int stepPinArray[numAxis];

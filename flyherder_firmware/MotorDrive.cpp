@@ -11,15 +11,22 @@
 MotorDrive::MotorDrive() 
 {
     _powerPin = constants::drivePowerPin;
-    _disablePin = constants::driveDisablePin;
     _faultPin = constants::driveFaultPin;
     _powerOnFlag = false;
+#ifdef HAVE_ENABLE
     _enabledFlag = false;
+    _disablePin = constants::driveDisablePin;
+#else
+    _enabledFlag = true;
+#endif
+
 }
 
 MotorDrive::MotorDrive(int powerPin, int disablePin, int faultPin) {
     _powerPin = powerPin;
+#ifdef HAVE_ENABLE 
     _disablePin = disablePin;
+#endif
     _faultPin = faultPin;
 }
 
@@ -27,10 +34,12 @@ void MotorDrive::initialize() {
     unsigned int speedInSteps;
     // Set pin modes for drive control pins
     pinMode(_powerPin, OUTPUT);
-    pinMode(_disablePin, OUTPUT);
     pinMode(_faultPin, INPUT);
     setPowerOff();
+#ifdef HAVE_ENABLE
+    pinMode(_disablePin, OUTPUT); 
     disable();
+#endif
 
     // Assign pins (step, dir, home) to motors
     for (int i=0; i<constants::numAxis; i++) {
@@ -48,6 +57,8 @@ void MotorDrive::initialize() {
     setSpeed(speedInSteps); 
 }
 
+
+#ifdef HAVE_ENABLE
 void MotorDrive::enable() {
     digitalWrite(_disablePin,LOW);
     _enabledFlag = true;
@@ -59,6 +70,10 @@ void MotorDrive::disable() {
     stopAll();
 }
 
+bool MotorDrive::isEnabled() {
+    return _enabledFlag;
+}
+#endif
 
 void MotorDrive::stop(unsigned int i) {
     if (i<constants::numAxis) {
@@ -112,9 +127,6 @@ bool MotorDrive::isPowerOn() {
     return _powerOnFlag;
 }
 
-bool MotorDrive::isEnabled() {
-    return _enabledFlag;
-}
 
 bool MotorDrive::isRunning() {
     bool flag = false;
@@ -133,7 +145,9 @@ void MotorDrive::setPowerOn() {
 void MotorDrive::setPowerOff() {
     digitalWrite(_powerPin,LOW);
     _powerOnFlag = false;
+#ifdef HAVE_ENABLE
     disable();
+#endif
 }
 
 void MotorDrive::setSpeed(unsigned int v) {
@@ -171,6 +185,18 @@ long MotorDrive::getCurrentPosition(unsigned int i) {
         rtnVal = _stepper[i].getCurrentPosition();
     }
     return rtnVal;
+}
+
+void MotorDrive::setCurrentPosition(unsigned int i, long pos) {
+    if (i < constants::numAxis) {
+        _stepper[i].setCurrentPosition(pos);
+    }
+}
+
+void MotorDrive::setCurrentPositionAll(Array<long, constants::numAxis> pos) {
+    for (int i=0; i<constants::numAxis; i++) {
+        setCurrentPosition(i,pos[i]);
+    }
 }
 
 void MotorDrive::setTargetPosition(unsigned int i, long pos) {

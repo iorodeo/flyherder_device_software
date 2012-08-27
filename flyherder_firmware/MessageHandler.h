@@ -34,15 +34,19 @@ class MessageHandler : public SerialReceiver {
 
         void handleStop();
         void handleIsRunning();
+#ifdef HAVE_ENABLE
         void handleEnable();
         void handleDisable();
         void handleIsEnabled();
+#endif
         void handleMoveToPosition();
         void handleMoveAxisToPosition();
         void handleMoveToHome();
         void handleMoveAxisToHome();
         void handleGetPosition();
         void handleGetAxisPosition();
+        void handleSetPosition();
+        void handleSetAxisPosition();
         void handleSetMaxSeparation();
         void handleGetMaxSeparation();
         void handleSetSpeed();
@@ -54,6 +58,9 @@ class MessageHandler : public SerialReceiver {
         void handleGetAxisOrientation();
         void handleSetStepsPerMM();
         void handleGetStepsPerMM();
+        void handleEnableBoundsCheck();
+        void handleDisableBoundsCheck();
+        void handleIsBoundsCheckEnabled();
         void handleSetSerialNumber();
         void handleGetSerialNumber();
         void handleGetModelNumber();

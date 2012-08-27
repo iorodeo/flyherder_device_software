@@ -17,22 +17,21 @@ void (*homeFcnTable[constants::numAxis])(void) = {
 
 SystemState::SystemState() {
     setErrMsg("");
+    disableBoundsCheck();
 }
 
 void SystemState::initialize() {
-
     Timer1.initialize(1000); // Dummpy period
     Timer1.attachInterrupt(timerUpdate);
-
     motorDrive.initialize();
     setDrivePowerOff();
+#ifdef  HAVE_ENABLE
     disable();
-
+#endif
     setStepsPerMMToDefault();
     setMaxSeparationToDefault();
     setOrientationToDefault();
     setupHoming();
-
     Timer1.start();
     setLedStatusOn();
 }
@@ -55,13 +54,52 @@ void SystemState::setupHoming() {
             homeSearchDir = '+';
         }
         homeSearchDistMM = constants::homeSearchDistScaleFact*axisSepMM;
-        homePosSteps = systemState.convertMMToSteps(homePosMM);
-        homeSearchDistSteps = systemState.convertMMToSteps(homeSearchDistMM);
+        homePosSteps = convertMMToSteps(homePosMM);
+        homeSearchDistSteps = convertMMToSteps(homeSearchDistMM);
 
         motorDrive.setHomeSearchDir(i, homeSearchDir);
         motorDrive.setHomePosition(i, homePosSteps);
         motorDrive.setHomeSearchDist(i, homeSearchDistSteps);
     }
+}
+
+bool SystemState::enableBoundsCheck() {
+    Array<float, constants::numAxis> posMM;
+    posMM = getPosition();
+    if (!checkPosBounds(posMM)) {return false;} 
+    _boundsCheck = true;
+    return true;
+}
+
+void SystemState::disableBoundsCheck() {
+    _boundsCheck = false;
+}
+
+bool SystemState::isBoundsCheckEnabled() {
+    return _boundsCheck;
+}
+
+bool SystemState::checkPosBounds(Array<float, constants::numAxis> posMM) {
+    Array<long, constants::numAxis> posStep;
+    posStep = convertMMToSteps(posMM);
+    for (int i=0; i<constants::numAxis; i++) {
+        if (posStep[i] < 0) { 
+            setErrMsg("position is less than 0");
+            return false;
+        }
+        if (posStep[i] > convertMMToSteps(_maxSeparation[i%constants::numDim])) {
+            setErrMsg("position is greater than max separation");
+            return false;
+
+        }
+    }
+    for (int i=0; i<constants::numDim; i++) {
+        if (posStep[i] > posStep[i+constants::numDim]) {
+            setErrMsg("position results in collision between axes");
+            return false;
+        }
+    }
+    return true;
 }
 
 void SystemState::setLedStatusOn() {
@@ -85,6 +123,7 @@ bool SystemState::isDrivePowerOn() {
     return motorDrive.isPowerOn();
 }
 
+#ifdef HAVE_ENABLE
 void SystemState::enable() {
     motorDrive.enable();
 }
@@ -96,6 +135,7 @@ void SystemState::disable() {
 bool SystemState::isEnabled() {
     return motorDrive.isEnabled();
 }
+#endif
 
 void SystemState::stop() {
     motorDrive.stopAll();
@@ -108,22 +148,19 @@ bool SystemState::isRunning() {
 
 bool SystemState::moveToPosition(Array<float,constants::numAxis> posMM) {
     Array<long,constants::numAxis> posStep;
-    for (int i=0; i<constants::numAxis; i++) {
-        posStep[i] = systemState.convertMMToSteps(posMM[i]);
-    }
+    posStep = convertMMToSteps(posMM);
     motorDrive.setTargetPositionAll(posStep);
     motorDrive.startAll();
     return true;
 }
 
 bool SystemState::moveAxisToPosition(int axis, float posMM) {
-    long posStep = systemState.convertMMToSteps(posMM);
+    long posStep = convertMMToSteps(posMM);
     if (!checkAxisArg(axis))  {return false;}
     motorDrive.setTargetPosition(axis,posStep);
     motorDrive.start(axis);
     return true;
 }
-
 
 bool SystemState::moveToHome() {
     for (int i=0; i<constants::numAxis; i++) {
@@ -144,15 +181,41 @@ Array<float,constants::numAxis> SystemState::getPosition() {
     Array<long, constants::numAxis> posSteps;
     Array<float,constants::numAxis> posMM;
     posSteps = motorDrive.getCurrentPositionAll();
-    for (int i=0; i<constants::numAxis; i++) {
-        posMM[i] = systemState.convertStepsToMM(posSteps[i]);
-    }
+    posMM = convertStepsToMM(posSteps);
     return posMM;
 }
 
 float SystemState::getAxisPosition(int axis) {
-    if (!checkAxisArg(axis)) {return 0.0;};
-    return motorDrive.getCurrentPosition(axis);
+    long posStep;
+    float posMM;
+    if (!checkAxisArg(axis)) {return 0.0;}
+    posStep = motorDrive.getCurrentPosition(axis);
+    posMM = convertStepsToMM(posStep);
+    return posMM;
+}
+
+bool SystemState::setPosition(Array<float, constants::numAxis> posMM) {
+    Array<long, constants::numAxis> posStep;
+    if (_boundsCheck) {
+        if (!checkPosBounds(posMM)) {return false;}
+    }
+    posStep = convertMMToSteps(posMM);
+    motorDrive.setCurrentPositionAll(posStep);
+    return true;
+}
+
+bool SystemState::setAxisPosition(int axis, float posMM) {
+    long posStep;
+    if (!checkAxisArg(axis)) {return false;}
+    if (_boundsCheck) {
+        Array<float, constants::numAxis> newPosMM;
+        newPosMM = getPosition();
+        newPosMM[axis] = posMM;
+        if (!checkPosBounds(newPosMM)) {return false;}
+    }
+    posStep = convertMMToSteps(posMM);
+    motorDrive.setCurrentPosition(axis,posStep);
+    return true;
 }
 
 void SystemState::setMaxSeparationToDefault() { 
@@ -196,7 +259,7 @@ bool SystemState::setSpeed(float v) {
         setErrMsg("speed > max allowed value");
         return false;
     }
-    unsigned int vSteps = (unsigned int) systemState.convertMMToSteps(v);
+    unsigned int vSteps = (unsigned int) convertMMToSteps(v);
     motorDrive.setSpeed(vSteps);
     _speed = v;
     return true;
@@ -294,6 +357,27 @@ float SystemState::convertStepsToMM(long x) {
     return ((float)x)/_stepsPerMM;
 }
 
+Array<long, constants::numAxis>  SystemState::convertMMToSteps(
+        Array<float, constants::numAxis> posMM
+        ) 
+{
+    Array<long, constants::numAxis> posSteps;
+    for (int i=0; i<constants::numAxis; i++) {
+        posSteps[i] = convertMMToSteps(posMM[i]);
+    }
+    return posSteps;
+}
+
+Array<float, constants::numAxis> SystemState::convertStepsToMM(
+        Array<long, constants::numAxis> posSteps
+        )
+{
+    Array<float, constants::numAxis> posMM;
+    for (int i=0; i<constants::numAxis; i++) {
+        posMM[i] = convertStepsToMM(posSteps[i]);
+    }
+    return posMM;
+}
 
 SystemState systemState;
 

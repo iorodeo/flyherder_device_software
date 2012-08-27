@@ -26,7 +26,9 @@ namespace constants {
     // Stepper params and pin assignment
     const int ledStatusPin = 6;
     const int drivePowerPin = 7;
+#ifdef HAVE_ENABLE
     const int driveDisablePin = 5;
+#endif
     const int driveFaultPin = 8;
     const int stepPinArray[numAxis] = {37,35,33,31};
     const int dirPinArray[numAxis] = {36,34,32,30};

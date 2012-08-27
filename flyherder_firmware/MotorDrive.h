@@ -11,10 +11,11 @@ class MotorDrive {
         void initialize();
         void update();
 
+#ifdef HAVE_ENABLE
         void enable();
         void disable();
-
         bool isEnabled();
+#endif
         bool isPowerOn();
         bool isRunning();
 
@@ -39,6 +40,8 @@ class MotorDrive {
 
         long getCurrentPosition(unsigned int i);
         Array<long, constants::numAxis> getCurrentPositionAll();
+        void setCurrentPosition(unsigned int i, long pos);
+        void setCurrentPositionAll(Array<long, constants::numAxis> pos);
 
         void setHomePosition(unsigned int i, long pos);
         void setHomePositionAll(Array<long, constants::numAxis> pos);
@@ -57,10 +60,12 @@ class MotorDrive {
 
         void homeAction(unsigned int i);
 
-    //private:
+    private:
         Array<Stepper,constants::numAxis> _stepper;
         int _powerPin;
+#ifdef HAVE_ENABLE
         int _disablePin;
+#endif
         int _faultPin;
         bool _powerOnFlag;
         bool _enabledFlag;

@@ -17,10 +17,11 @@ class SystemState {
         void setDrivePowerOff();
         bool isDrivePowerOn();
 
+#ifdef HAVE_ENABLE
         void enable();
         void disable();
         bool isEnabled();
-
+#endif
         void stop();
         bool isRunning();
 
@@ -31,6 +32,8 @@ class SystemState {
 
         Array<float,constants::numAxis> getPosition();
         float getAxisPosition(int axis);
+        bool setPosition(Array<float, constants::numAxis> pos);
+        bool setAxisPosition(int axis, float pos);
 
         void setMaxSeparationToDefault();
         bool setMaxSeparation(Array<float,constants::numDim> maxSeparation);
@@ -61,16 +64,25 @@ class SystemState {
 
         long convertMMToSteps(float x);
         float convertStepsToMM(long x);
+        Array<long, constants::numAxis> convertMMToSteps(Array<float, constants::numAxis> posMM);
+        Array<float, constants::numAxis> convertStepsToMM(Array<long, constants::numAxis> posSteps);
 
-    //private:
+        bool enableBoundsCheck();
+        void disableBoundsCheck();
+        bool isBoundsCheckEnabled();
+
+        MotorDrive motorDrive;
+
+    private:
 
         bool checkAxisArg(int axis);
+        bool checkPosBounds(Array<float,constants::numAxis> posMM);
         Array<float,constants::numDim> _maxSeparation;
         Array<char,constants::numAxis> _orientation;
         float _stepsPerMM;   
         float _speed;
         float _acceleration;
-        MotorDrive motorDrive;
+        bool _boundsCheck;
         
 };
 

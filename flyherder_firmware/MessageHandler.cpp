@@ -17,44 +17,53 @@ enum {
     cmdGetDimOrder,            // Done
     cmdGetAllowedOrientation,  // Done
 
-    cmdSetDrivePowerOn,        // Done * 
-    cmdSetDrivePowerOff,       // Done *
-    cmdIsDrivePowerOn,         //
+    cmdSetDrivePowerOn,        // Done  
+    cmdSetDrivePowerOff,       // Done 
+    cmdIsDrivePowerOn,         // Done
     
-    cmdStop,                   // Done * 
-    cmdIsRunning,              // Done * 
-    cmdEnable,                 // Done *
-    cmdDisable,                // Done * 
-    cmdIsEnabled,              // Done *
+    cmdStop,                   // Done  
+    cmdIsRunning,              // Done  
 
-    cmdMoveToPosition,         // Done * 
-    cmdMoveAxisToPosition,     // Done *
-    cmdMoveToHome,             // Done * 
+#ifdef HAVE_ENABLE
+    cmdEnable,                 // Done 
+    cmdDisable,                // Done  
+    cmdIsEnabled,              // Done 
+#endif
+
+    cmdMoveToPosition,         // Done  
+    cmdMoveAxisToPosition,     // Done 
+    cmdMoveToHome,             // Done  
     cmdMoveAxisToHome,         // 
-    cmdIsInHomePosition,       // Done *
+    cmdIsInHomePosition,       // Done 
 
-    cmdGetPosition,            // Done *
-    cmdGetAxisPosition,        // Done *
+    cmdGetPosition,            // Done 
+    cmdGetAxisPosition,        // Done 
+    cmdSetPosition,            //
+    cmdSetAxisPosition,        //
 
     cmdSetMaxSeparation,       // Done
     cmdGetMaxSeparation,       // Done
     
-    cmdSetSpeed,               // Done *
-    cmdGetSpeed,               // Done *
+    cmdSetSpeed,               // Done 
+    cmdGetSpeed,               // Done 
 
-    cmdSetOrientation,         // Done *
+    cmdSetOrientation,         // Done 
     cmdGetOrientation,         // Done 
 
-    cmdSetAxisOrientation,     // Done *
+    cmdSetAxisOrientation,     // Done 
     cmdGetAxisOrientation,     // Done
 
     cmdSetStepsPerMM,          // Done
     cmdGetStepsPerMM,          // Done
 
-    cmdSetSerialNumber,        //
-    cmdGetSerialNumber,        // Done *
+    cmdEnableBoundsCheck,      // Done
+    cmdDisableBoundsCheck,     // Done
+    cmdIsBoundsCheckEnabled,   // Done
 
-    cmdGetModelNumber,         // Done *
+    cmdSetSerialNumber,        //
+    cmdGetSerialNumber,        // Done 
+
+    cmdGetModelNumber,         // Done 
 
     // DEVELOPMENT
     cmdDebug, 
@@ -76,10 +85,7 @@ void MessageHandler::processMsg() {
 }
 
 void MessageHandler::msgSwitchYard() {
-    int cmd;
-
-    cmd = readInt(0); 
-
+    int cmd = readInt(0); 
     dprint.start();
     dprint.addIntItem("cmdId", cmd);
 
@@ -145,6 +151,7 @@ void MessageHandler::msgSwitchYard() {
             handleIsRunning();
             break;
 
+#ifdef HAVE_ENABLE
         case cmdEnable:
             handleEnable();
             break;
@@ -156,6 +163,7 @@ void MessageHandler::msgSwitchYard() {
         case cmdIsEnabled:
             handleIsEnabled();
             break;
+#endif
 
         case cmdMoveToPosition:
             handleMoveToPosition();
@@ -179,6 +187,14 @@ void MessageHandler::msgSwitchYard() {
 
         case cmdGetAxisPosition:
             handleGetAxisPosition();
+            break;
+
+        case cmdSetPosition:
+            handleSetPosition();
+            break;
+
+        case cmdSetAxisPosition:
+            handleSetAxisPosition();
             break;
 
         case cmdSetMaxSeparation:
@@ -223,6 +239,18 @@ void MessageHandler::msgSwitchYard() {
 
         case cmdGetStepsPerMM:
             handleGetStepsPerMM();
+            break;
+
+        case cmdEnableBoundsCheck: 
+            handleEnableBoundsCheck();
+            break;
+
+        case cmdDisableBoundsCheck: 
+            handleDisableBoundsCheck();
+            break;
+
+        case cmdIsBoundsCheckEnabled: 
+            handleIsBoundsCheckEnabled();
             break;
 
         case cmdSetSerialNumber:
@@ -316,9 +344,11 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("isDrivePowerOn", cmdIsDrivePowerOn);
     dprint.addIntItem("stop", cmdStop);             
     dprint.addIntItem("isRunning", cmdIsRunning);        
+#ifdef HAVE_ENABLE
     dprint.addIntItem("enable", cmdEnable);          
     dprint.addIntItem("disable", cmdDisable);          
     dprint.addIntItem("isEnabled", cmdIsEnabled);        
+#endif
     dprint.addIntItem("moveToPosition", cmdMoveToPosition);        
     dprint.addIntItem("moveAxisToPosition", cmdMoveAxisToPosition);
     dprint.addIntItem("moveToHome", cmdMoveToHome);     
@@ -328,6 +358,8 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("getMaxSeparation", cmdGetMaxSeparation);
     dprint.addIntItem("getPosition", cmdGetPosition);
     dprint.addIntItem("getAxisPosition", cmdGetAxisPosition);
+    dprint.addIntItem("setPosition", cmdSetPosition);
+    dprint.addIntItem("setAxisPosition", cmdSetAxisPosition);
     dprint.addIntItem("setSpeed", cmdSetSpeed);      
     dprint.addIntItem("getSpeed", cmdGetSpeed);      
     dprint.addIntItem("setOrientation", cmdSetOrientation);
@@ -336,6 +368,9 @@ void MessageHandler::handleGetCmds() {
     dprint.addIntItem("getAxisOrientation", cmdGetAxisOrientation);
     dprint.addIntItem("setStepsPerMM", cmdSetStepsPerMM);
     dprint.addIntItem("getStepsPerMM", cmdGetStepsPerMM);
+    dprint.addIntItem("enableBoundsCheck", cmdEnableBoundsCheck);
+    dprint.addIntItem("disableBoundsCheck", cmdDisableBoundsCheck);
+    dprint.addIntItem("isBoundsCheckEnabled", cmdIsBoundsCheckEnabled);
     dprint.addIntItem("setSerialNumber", cmdSetSerialNumber);
     dprint.addIntItem("getSerialNumber", cmdGetSerialNumber);
     dprint.addIntItem("getModelNumber", cmdGetModelNumber);
@@ -421,6 +456,8 @@ void MessageHandler::handleIsRunning() {
     dprint.addIntItem("isRunning", systemState.isRunning());
 }
 
+
+#ifdef HAVE_ENABLE
 void MessageHandler::handleEnable() {
     systemState.enable();
     dprint.addIntItem("status",rspSuccess);
@@ -435,6 +472,7 @@ void MessageHandler::handleIsEnabled() {
     dprint.addIntItem("status", rspSuccess);
     dprint.addIntItem("isEnabled", systemState.isEnabled());
 }
+#endif
 
 void MessageHandler::handleMoveToPosition() {
     Array<float,constants::numAxis> pos;
@@ -490,6 +528,26 @@ void MessageHandler::handleGetAxisPosition() {
     dprint.addFltItem("position", pos);
 }
 
+void MessageHandler::handleSetPosition() {
+    Array<float,constants::numAxis> pos;
+    if (!checkNumberOfArgs(constants::numAxis+1)) {return;}
+    for (int i=0; i<constants::numAxis; i++) {
+        pos[i] = readFloat(i+1);
+    }
+    systemCmdRsp(systemState.setPosition(pos));
+}
+
+void MessageHandler::handleSetAxisPosition() {
+    char axisName[constants::nameSize];
+    int axisNumber;
+    float pos;
+    if (!checkNumberOfArgs(3)) {return;}
+    copyString(1,axisName,constants::nameSize);
+    pos = readFloat(2);
+    if (!getAxisNumberFromName(axisName,axisNumber)) {return;}
+    systemCmdRsp(systemState.setAxisPosition(axisNumber,pos));
+}
+
 void MessageHandler::handleSetMaxSeparation() {
     Array<float,constants::numDim> maxSeparation;
     if (!checkNumberOfArgs(constants::numDim+1)) {return;}
@@ -525,8 +583,6 @@ void MessageHandler::handleIsInHomePosition() {
     dprint.addIntItem("isInHomePosition", systemState.isInHomePosition());
 }
 
-// -------------------------------------------------
-// NEED to finish 
 void MessageHandler::handleSetOrientation() {
     Array<char,constants::numAxis> orientation;
     if (!checkNumberOfArgs(constants::numAxis+1)) {return;}
@@ -579,6 +635,20 @@ void MessageHandler::handleGetStepsPerMM() {
     float stepsPerMM = systemState.getStepsPerMM();
     dprint.addIntItem("status", rspSuccess);
     dprint.addFltItem("stepsPerMillimeter", stepsPerMM);
+}
+
+void MessageHandler::handleEnableBoundsCheck() {
+    systemCmdRsp(systemState.enableBoundsCheck());
+}
+
+void MessageHandler::handleDisableBoundsCheck() {
+    systemState.disableBoundsCheck();
+    dprint.addIntItem("status", rspSuccess);
+}
+
+void MessageHandler::handleIsBoundsCheckEnabled() {
+    dprint.addIntItem("status", rspSuccess);
+    dprint.addIntItem("isBoundsCheckEnabled", systemState.isBoundsCheckEnabled());
 }
 
 void MessageHandler::handleSetSerialNumber() {

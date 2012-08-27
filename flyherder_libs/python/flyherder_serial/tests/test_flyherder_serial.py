@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flyherder import FlyHerder
+from flyherder_serial import FlyHerder
 from pprint import pprint
 
 TEST_FLOAT_PREC = 1.0e-6
@@ -90,22 +90,29 @@ def test_isRunning():
     print('\ndev.isRunning() = ')
     pprint(rsp)
 
-def test_enable():
-    dev.enable()
 
-def test_disable():
-    dev.disable()
+if 'enable' in dev.cmdDict:
+    def test_enable():
+        dev.enable()
 
-def test_isEnabled():
-    rsp = dev.isEnabled()
-    print('\ndev.isEnabled() = ')
-    pprint(rsp)
+if 'disable' in dev.cmdDict:
+    def test_disable():
+        dev.disable()
 
-def test_enable_disable():
-    dev.enable()
-    assert dev.isEnabled()
-    dev.disable()
-    assert not dev.isEnabled()
+if 'isEnabled' in dev.cmdDict:
+    def test_isEnabled():
+        rsp = dev.isEnabled()
+        print('\ndev.isEnabled() = ')
+        pprint(rsp)
+    
+if 'enable' in dev.cmdDict: 
+    if 'disable' in dev.cmdDict:  
+        if 'isEnabled' in dev.cmdDict:
+            def test_enable_disable():
+                dev.enable()
+                assert dev.isEnabled()
+                dev.disable()
+                assert not dev.isEnabled()
 
 def test_moveToPosition():
     posTuple = (1.0,2.0,3.0,4.0)
@@ -144,6 +151,52 @@ def test_getAxisPosition():
         assert type(pos) is float
         print('dev.getAxisPosition({0}) = {1}'.format(ax,pos))
 
+def test_setPosition():
+    stepsPerMM = dev.getStepsPerMM()
+    posWrite = {
+            'x0' : 10, 
+            'y0' : 20,
+            'x1' : 30, 
+            'y1' : 40, 
+            }
+    dev.setPosition(posWrite)
+    posRead = dev.getPosition()
+    assert posWrite.keys() == posRead.keys()
+    print()
+    print('posWrite = ')
+    pprint(posWrite)
+    print('posRead = ')
+    pprint(posRead)
+    for name in posWrite:
+        valWrite = posWrite[name]
+        valRead = posRead[name]
+        assert abs(valWrite - valRead) < 1.0/stepsPerMM 
+
+def test_setAxisPosition():
+    stepsPerMM = dev.getStepsPerMM()
+    posWrite = {
+            'x0' : 10, 
+            'y0' : 20,
+            'x1' : 30, 
+            'y1' : 40, 
+            }
+    posRead = {}
+    for name, value in posWrite.iteritems():
+        dev.setAxisPosition(name,value)
+        posRead[name] = dev.getAxisPosition(name)
+    print()
+    print('posWrite = ')
+    pprint(posWrite)
+    print('posRead = ')
+    pprint(posRead)
+    for name in posWrite:
+        valWrite = posWrite[name]
+        valRead = posRead[name]
+        assert abs(valWrite - valRead) < 1.0/stepsPerMM 
+    
+
+
+
 def test_getMaxSeparation():
     sepDict = dev.getMaxSeparation()
     dimDict = dev.getDimOrder()
@@ -162,22 +215,18 @@ def test_setMaxSeparation():
     readValues = dev.getMaxSeparation()
     assert writeValues == readValues
 
-def test_setMaxSpeed():
+def test_setSpeed():
     # NOT DONE
-    dev.setMaxSpeed(2.0)
+    dev.setSpeed(20.0)
 
-def test_getMaxSpeed():
+def test_getSpeed():
     # NOT DONE
-    dev.getMaxSpeed()
-
-def test_setAcceleration():
-    # NOT DONE
-    dev.setAcceleration(3.0)
-
-def test_getAcceleration():
-    # NOT DONE
-    dev.getAcceleration()
-
+    speedWrite = 15.0
+    dev.setSpeed(speedWrite)
+    speedRead = dev.getSpeed()
+    deltaSpeed = abs((speedWrite - speedRead)/speedWrite)
+    assert deltaSpeed < TEST_FLOAT_PREC
+   
 def test_getOrientation():
     allowedOrientation = dev.getAllowedOrientation()
     orientDict = dev.getOrientation()
@@ -220,6 +269,26 @@ def test_setStepsPerMM():
     stepsPerMMRead = dev.getStepsPerMM()
     delta = abs((stepsPerMMWrite -stepsPerMMRead)/stepsPerMMWrite)
     assert  delta < TEST_FLOAT_PREC
+
+def test_enableBoundsCheck():
+    dev.setMaxSeparation({'x': 100, 'y':100})
+    dev.setPosition({ 'x0' : 10, 'y0' : 20, 'x1' : 30, 'y1' : 40, })
+    dev.enableBoundsCheck()
+    dev.disableBoundsCheck()
+
+def test_disableBoundsCheck():
+    dev.disableBoundsCheck()
+    dev.setMaxSeparation({'x': 10, 'y':10})
+    dev.setPosition({ 'x0' : 100, 'y0' : 100, 'x1' : 300, 'y1' : 300, })
+    dev.setPosition({ 'x0' : 0, 'y0' : 0, 'x1' : 0, 'y1' : 0, })
+
+def test_isBoundsCheckEnabled():
+    dev.setMaxSeparation({'x': 100, 'y':100})
+    dev.setPosition({ 'x0' : 10, 'y0' : 20, 'x1' : 30, 'y1' : 40, })
+    dev.enableBoundsCheck()
+    assert dev.isBoundsCheckEnabled 
+    dev.disableBoundsCheck()
+    assert not dev.isBoundsCheckEnabled()
 
 def test_getSerialNumber():
     rsp = dev.getSerialNumber()

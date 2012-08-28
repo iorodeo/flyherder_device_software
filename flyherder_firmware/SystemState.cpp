@@ -44,6 +44,7 @@ void SystemState::setupHoming() {
     long homePosSteps;
     long homeSearchDistSteps;
     for (int i=0; i<constants::numAxis; i++) {
+        attachInterrupt(constants::homeInterruptArray[i], homeFcnTable[i], FALLING);
         axisSepMM = getMaxSeparation(i%constants::numDim);
         if (i < constants::numDim) {
             homePosMM = 0.0;
@@ -171,16 +172,12 @@ bool SystemState::moveAxisToPosition(int axis, float posMM) {
 }
 
 bool SystemState::moveToHome() {
-    for (int i=0; i<constants::numAxis; i++) {
-        attachInterrupt(constants::homeInterruptArray[i], homeFcnTable[i], FALLING);
-    }
     motorDrive.homeAll();
     return true;
 }
 
 bool SystemState::moveAxisToHome(int axis) {
     if (!checkAxisArg(axis)) {return false;}
-    attachInterrupt(constants::homeInterruptArray[axis], homeFcnTable[axis], FALLING);
     motorDrive.home(axis);
     return true;
 }
@@ -233,6 +230,8 @@ void SystemState::setMaxSeparationToDefault() {
 }
 
 bool SystemState::setMaxSeparation(Array<float,constants::numDim> maxSeparation) {
+    float homePosMM;
+    long homePosStep;
     for (int i=0; i<constants::numDim; i++) {
         if (maxSeparation[i] <= 0) {
             setErrMsg("separation value <= 0");
@@ -241,6 +240,17 @@ bool SystemState::setMaxSeparation(Array<float,constants::numDim> maxSeparation)
     }
     for (int i=0; i<constants::numDim; i++) {
         _maxSeparation[i] = maxSeparation[i];
+    }
+    // Update the home positions of the stepper motors
+    for (int i=0; i<constants::numAxis; i++) {
+        if (i< constants::numDim) {
+            homePosMM = 0.0;
+        }
+        else {
+            homePosMM = _maxSeparation[i%constants::numDim];
+        }
+        homePosStep = convertMMToSteps(homePosMM);
+        motorDrive.setHomePosition(i,homePosStep);
     }
     return true;
 }

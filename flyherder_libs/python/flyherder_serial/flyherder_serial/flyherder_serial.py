@@ -1,11 +1,14 @@
 from __future__ import print_function
+import time
 import functools
 from serial_device import SerialDevice, findDevices
 
 class FlyHerder(SerialDevice):
 
-    DEVICE_MODEL_NUMBER = 1105
     BAUDRATE = 9600 
+    DEVICE_MODEL_NUMBER = 1105
+    POWER_ON_SLEEP_T = 1.0
+    WAIT_SLEEP_DT = 0.2
 
     def __init__(self,*args,**kwargs):
         kwargs.update({'baudrate': FlyHerder.BAUDRATE})
@@ -20,6 +23,10 @@ class FlyHerder(SerialDevice):
         self.axisOrderDict = self.getAxisOrder()
         self.dimOrderDict = self.getDimOrder()
 
+    def wait(self):
+        while self.isRunning():
+            time.sleep(FlyHerder.WAIT_SLEEP_DT)
+
     def cmdFuncBase(self,cmdName,*args):
         if len(args) == 1 and type(args[0]) is dict:
             argsDict = args[0]
@@ -27,6 +34,8 @@ class FlyHerder(SerialDevice):
         else:
             argsList = args
         rspDict = self.sendCmdByName(cmdName,*argsList)
+        if cmdName == 'setDrivePowerOn':
+            time.sleep(FlyHerder.POWER_ON_SLEEP_T)
         if rspDict:
             retValue = self.processRspDict(rspDict)
             return retValue

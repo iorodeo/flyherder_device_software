@@ -13,7 +13,7 @@ namespace constants {
     const float maxSeparationDefault = 300;   // (mm)
     const float speedDefault = 10.0;          // (mm/s)
     const float minSpeed = 0.1;               // (mm/s)
-    const float maxSpeed = 100.0;             // (mm/s)
+    const float maxSpeed = 90.0;              // (mm/s)
     const float stepsPerMMDefault = stepsPerRev/threadLead;  
     const float homeSearchDistScaleFact = 1.5;
 

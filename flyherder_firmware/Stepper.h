@@ -59,8 +59,8 @@ class Stepper {
         uint8_t _dirPin; 
         uint8_t _homePin;
 
-        bool _dirInverted;
-        bool _stepInverted;
+        volatile bool _dirInverted;
+        volatile bool _stepInverted;
 
         char _homeSearchDir;
         long _homeSearchDist;
@@ -111,7 +111,6 @@ inline void Stepper::setStepPinHigh() {
         else { 
             *_stepPortReg |= _stepBitMask;
         }
-        digitalWrite(_stepPin, HIGH);
     }
 }
 

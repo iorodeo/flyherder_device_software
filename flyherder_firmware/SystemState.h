@@ -88,28 +88,10 @@ class SystemState {
 
 extern SystemState systemState;
 
-inline void X0HomeFcn() {
-    systemState.motorDrive.homeAction(0);
-    detachInterrupt(constants::homeInterruptArray[0]);
-}
-
-inline void Y0HomeFcn() {
-    systemState.motorDrive.homeAction(1);
-    detachInterrupt(constants::homeInterruptArray[1]);
-}
-
-inline void X1HomeFcn() {
-    systemState.motorDrive.homeAction(2);
-    detachInterrupt(constants::homeInterruptArray[2]);
-}
-
-inline void Y1HomeFcn() {
-    systemState.motorDrive.homeAction(3);
-    detachInterrupt(constants::homeInterruptArray[3]);
-}
-
-inline void timerUpdate() {
-    systemState.motorDrive.update();
-}
+inline void X0HomeFcn() {systemState.motorDrive.homeAction(0);}
+inline void Y0HomeFcn() {systemState.motorDrive.homeAction(1);}
+inline void X1HomeFcn() {systemState.motorDrive.homeAction(2);}
+inline void Y1HomeFcn() {systemState.motorDrive.homeAction(3);}
+inline void timerUpdate() {systemState.motorDrive.update();}
 
 #endif

@@ -60,15 +60,23 @@ void Stepper::stop() {
 }
 
 void Stepper::home() {
-    // Should be called in an atomic block
-    if (_homeSearchDir == '+') {
-        _targetPos = _currentPos + labs(_homeSearchDist);
-    }
+    int homeVal = digitalRead(_homePin);
+    if (homeVal == LOW) {
+        _homing = false;
+        _running = false;
+        _currentPos = _homePos;
+    } 
     else {
-        _targetPos = _currentPos - labs(_homeSearchDist);
+        // Should be called in an atomic block
+        if (_homeSearchDir == '+') {
+            _targetPos = _currentPos + labs(_homeSearchDist);
+        }
+        else {
+            _targetPos = _currentPos - labs(_homeSearchDist);
+        }
+        _homing = true;
+        _running = true;
     }
-    _homing = true;
-    _running = true;
 }
 
 bool Stepper::isRunning() {

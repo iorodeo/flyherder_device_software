@@ -3,7 +3,6 @@
 #include <string.h>
 
 template <class T, int size> class Array {
-
     public:
         Array();
         Array(T value);
@@ -12,7 +11,6 @@ template <class T, int size> class Array {
 
     private:
         T _values[size];
-
 };
 
 template <class T, int size> 

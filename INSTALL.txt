@@ -1,0 +1,50 @@
+Serial libraries - located in flyherder_libs
+================================================
+
+  * Matlab serial library - flyherder_libs/matlab
+    
+    Add the flyherder_libs/matlab/flyherder_serial directory and all
+    subdirectorys to the Matlab path.
+  
+    Examples can be found in the flyherder_libs/matlab/flyherder_examples
+    directory.
+  
+    For documentation on the FlyHerderSerial object type: 
+    "help FlyHerderSerial" at the Matlab command prompt.
+  
+  
+  
+  * Python serial library - flyherder_libs/python
+  
+    Uses the usual python package installation via setup_tools - install with
+    "python setup.py install" from the command line when in the 
+    flyherder_libs/python/flyherder_serial directory. 
+    For more infomration See the INSTALL.txt file in the 
+    flyherder_libs/python/flyherder_serial directory. 
+  
+    Examples of can be found in the
+    flyherder_libs/python/flyherder_serial/examples directory.
+  
+    Unit tests of the serial api can be found in
+    flyherder_libs/flyherder_serial/test directory. See the readme before running.
+  
+    Demo GUI 
+
+
+System Firmware
+================
+
+Should be pre-loaded on the system  - so this is only required if the firmware
+needs to be upgraded. Firmware installation instructions can be found in
+flyherder_firmware/INSTALL.txt file.
+
+
+
+
+
+
+
+
+
+    
+

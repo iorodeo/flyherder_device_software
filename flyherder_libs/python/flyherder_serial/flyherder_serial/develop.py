@@ -67,6 +67,7 @@ if 1:
     print('maxSep {0}'.format(maxSep))
     dev.setMaxSeparation(maxSep,maxSep)
     dev.setOrientation('-','-','+','+')
+    print(dev.getOrientation)
     dev.setDrivePowerOn()
     for i in range(0,2):
 
@@ -77,8 +78,8 @@ if 1:
         print('  homing ... ',end='')
         sys.stdout.flush()
         dev.setSpeed(homeSpeed)
-        #dev.moveToHome()
-        dev.setPosition(0,0,maxSep, maxSep)
+        dev.moveToHome()
+        #dev.setPosition(0,0,maxSep, maxSep)
         dev.wait()
         print('done')
         print('  isInHomePosition==', dev.isInHomePosition())
@@ -131,7 +132,9 @@ if 0:
     print(dev.getPosition())
 
 
+if 0:
 
+    print(dev.getAllowedOrientation())
 
 
     

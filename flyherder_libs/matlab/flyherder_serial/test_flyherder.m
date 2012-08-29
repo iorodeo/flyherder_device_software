@@ -1,7 +1,11 @@
 function test_flyherder
-    x = FlyHerderSerial('com67');
-    x.open();
-    x.getAxisPosition('y0')
-    x.isDrivePowerOn()
-    x.delete();
+    dev = FlyHerderSerial('com59');
+    dev.open();
+    axisNames = dev.getAxisNames();
+    disp(axisNames);
+    pos = dev.getPosition();
+    disp(pos);
+    order = dev.getAxisOrder();
+    disp(order)
+    delete(dev);
 end

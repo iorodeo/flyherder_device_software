@@ -66,10 +66,10 @@
 % 
 %   * getDimOrder = returns a structure specifying the order (for function calls) of 
 %     dimensions. Note, each dimension name shows up as a fieldname of the structure.
+%     Usage: dimOrder = dev.getDimOrder()
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   * getAllowedOrientation - broken??
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   * getAllowedOrientation - returns cell array containing the allowed axis orientations 
+%     Usage:  allowedOrientations = dev.getAllowedOrientations()
 %
 %   * setDrivePowerOn - turns the power to the stepper motor drive on.
 %     Usage: dev.setDrivePowerOn()
@@ -77,12 +77,16 @@
 %   * setDrivePowerOff - turns the power to the stepper motor drive off.
 %     Usage: dev.setDrivePowerOff()
 %
-%   * isDrivePowerOn
-%   * stop
-%   * isRunning
-%   * enable
-%   * disable
-%   * isEnabled
+%   * isDrivePowerOn - returns true or false based on whether or not drive power is on.
+%     Usage: value = dev.isDrivePowerOn()
+%     
+%   * stop - stops all currently running moves.
+%     Usage: dev.stop()
+%    
+%   * isRunning - return true or false based on whether or not any moves are currently in 
+%     in progress.
+%     Usage: value = dev.isRunning()
+%
 %   * moveToPosition
 %   * moveAxisToPosition
 %   * moveToHome
@@ -113,6 +117,7 @@
 %
 %   * getModelNumber - returns the device model number
 %     Usage: modelNum = dev.getModelNumber()
+%
 %
 % Author: Will Dickson, IO Rodeo Inc.
 % 

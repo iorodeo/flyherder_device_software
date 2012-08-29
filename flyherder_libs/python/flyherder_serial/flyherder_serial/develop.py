@@ -68,7 +68,7 @@ if 1:
     dev.setMaxSeparation(maxSep,maxSep)
     dev.setOrientation('-','-','+','+')
     dev.setDrivePowerOn()
-    for i in range(0,10):
+    for i in range(0,2):
 
         print()
         print('trial {0}'.format(i))
@@ -77,9 +77,11 @@ if 1:
         print('  homing ... ',end='')
         sys.stdout.flush()
         dev.setSpeed(homeSpeed)
-        dev.moveToHome()
+        #dev.moveToHome()
+        dev.setPosition(0,0,maxSep, maxSep)
         dev.wait()
         print('done')
+        print('  isInHomePosition==', dev.isInHomePosition())
         posDict = dev.getPosition()
         posTuple = posDict['x0'], posDict['y0'], posDict['x1'], posDict['y1']
         print('  pos {0}'.format(posTuple))
@@ -101,6 +103,7 @@ if 1:
         dev.moveToPosition(*pos)
         dev.wait()
         print('done')
+        print('  isInHomePosition==', dev.isInHomePosition())
         posDict = dev.getPosition()
         posTuple = posDict['x0'], posDict['y0'], posDict['x1'], posDict['y1']
         print('  pos {0}'.format(posTuple))

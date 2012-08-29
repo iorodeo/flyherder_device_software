@@ -104,6 +104,15 @@ void Stepper::setHomePosition(long position) {
     _homePos = position;
 }
 
+bool Stepper::isHome() {
+    if (_currentPos == _homePos) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 long Stepper::getHomePosition() {
     return _homePos;
 }

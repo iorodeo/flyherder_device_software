@@ -291,6 +291,8 @@ bool SystemState::isInHomePosition() {
     // NOT DONE
     bool rtnVal = false;
     if (~isRunning()) {
+        rtnVal = motorDrive.isHomeAll();
+
     }
     return rtnVal;
 }

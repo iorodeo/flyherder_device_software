@@ -40,6 +40,7 @@ class Stepper {
 
         void setHomePosition(long position);
         long getHomePosition();
+        bool isHome();
 
         void setHomeSearchNeg();
         void setHomeSearchPos();

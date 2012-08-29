@@ -244,6 +244,23 @@ Array<long, constants::numAxis> MotorDrive::getHomePositionAll() {
     return pos;
 }
 
+bool MotorDrive::isHome(unsigned int i) {
+    if (i<constants::numAxis) {
+        return _stepper[i].isHome();
+    }
+    else {
+        return false;
+    }
+}
+
+bool MotorDrive::isHomeAll() {
+    bool homeFlag = true;
+    for (int i=0; i<constants::numAxis; i++) {
+        homeFlag &= isHome(i);
+    }
+    return homeFlag;
+}
+
 void MotorDrive::setHomeSearchDir(unsigned int i, char dir) {
     if (i < constants::numAxis)  {
         _stepper[i].setHomeSearchDir(dir);

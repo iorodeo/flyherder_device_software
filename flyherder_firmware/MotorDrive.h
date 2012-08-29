@@ -48,6 +48,9 @@ class MotorDrive {
         long getHomePosition(unsigned int i);
         Array<long, constants::numAxis> getHomePositionAll();
 
+        bool isHome(unsigned int i);
+        bool isHomeAll();
+
         void setHomeSearchDir(unsigned int i, char dir);
         void setHomeSearchDirAll(Array<char, constants::numAxis> dir);
         char getHomeSearchDir(unsigned int i);

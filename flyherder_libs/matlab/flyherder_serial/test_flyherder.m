@@ -7,5 +7,6 @@ function test_flyherder
     disp(pos);
     order = dev.getAxisOrder();
     disp(order)
+    allowedOrient = dev.getAllowedOrientation()
     delete(dev);
 end

@@ -121,6 +121,7 @@ classdef FlyHerderSerial < handle
     
     properties
         dev = [];
+        debug = false;
     end
 
     properties (Access=private)
@@ -276,12 +277,23 @@ classdef FlyHerderSerial < handle
             %  cmdId    = the Id number of the command
             %  varagin  = any additional arguments required by the command
             if obj.isOpen
+
                 % Send command to device
                 cmdStr = obj.createCmdStr(cmdId, varargin);
+                if obj.debug
+                    fprintf('cmdStr: '); 
+                    fprintf('%c',cmdStr);
+                    fprintf('\n');
+                end
                 fprintf(obj.dev,'%c\n',cmdStr);
 
                 % Get response as json string and parse
                 rspStrJson = fscanf(obj.dev,'%c');
+                if obj.debug
+                    fprintf('rspStr: '); 
+                    fprintf('%c',rspStrJson);
+                    fprintf('\n');
+                end
                 try
                     rspStruct = loadjson(rspStrJson);
                 catch ME
@@ -374,16 +386,23 @@ classdef FlyHerderSerial < handle
 
         function rtnVal = dynamicMethodFcn(obj,S)
             % dynamicMethodFcn - implements a the dynamically generated methods.
+
+            % Get command name, command args and command id number
             cmdName = S(1).subs;
             try
                 cmdArgs = S(2).subs;
             catch
                 cmdArgs = {};
             end
+            cmdId = obj.cmdIdStruct.(cmdName);
+            % Convert command arguments from structure if required
             %if length(cmdArgs) == 1 && strcmp(class(cmdArgs{1}), 'struct')
             %end
-            cmdId = obj.cmdIdStruct.(cmdName);
+
+            % Send command and get response
             rspStruct = obj.sendCmd(cmdId,cmdArgs{:});
+
+            % Convert response into return value.
             rspFieldNames = fieldnames(rspStruct);
             if length(rspFieldNames) == 0
                 rtnVal = [];
@@ -398,10 +417,22 @@ classdef FlyHerderSerial < handle
                         emptyFlag = false;
                     end
                 end
+                % Return structure or if only fieldnames return cell array of fieldnames
                 if ~emptyFlag
                     rtnVal = rspStruct;
                 else
                     rtnVal = rspFieldNames;
+                    for i = 1:length(rtnVal)
+                        name = rtnVal{i};
+                        % Convert '-' character back to human readable
+                        if strcmp(name, 'x0x2D_')
+                            rtnVal{i} = '-';
+                        end
+                        % Convert '+' character back to human readable
+                        if strcmp(name, 'x0x2B_');
+                            rtnVal{i} = '+';
+                        end
+                    end
                 end
             end
         end

@@ -2,6 +2,7 @@
 % FlyHerderSerial - provides a serial interface to the flyherder hardware. 
 %
 % Notes: 
+%
 %  * The flyherder device has 4 axes - x0, y0, x1, y1.  
 %  * The xi axes move in the x-direction and the yi axes move in the y-direction. 
 %  * The positions of the x1, y1 axes  are assumed to be greater then or equal 
@@ -12,8 +13,11 @@
 %    dist(pos(y0), pos(y1)) = maxSeparationY,
 %    in the home position. In other words the home positions is 
 %    homePostion = (0, 0, maxSeparationX, maxSeparationY)
+%  * The x0, y0 axes always home in the negative direction and the x1, y1 axes always 
+%    home in the positive direction.
 %
 % Usage:  
+%
 %   dev = FlyHerderSerial('com2')           % creates a flyherder device object
 %   dev.open()                              % opens a serial connection to the device
 %   dev.setMaxSeparation(300.0, 300.0)      % set max x0, x1 and y0, y1 axis separations
@@ -35,9 +39,37 @@
 % Public properties
 % ------------------
 %
+%   * debug = debug flag, turns on debug messages if true. 
+%
+%   (Dependent)
+%   * isOpen    = true is serial connection to device is open, false otherwire
+%   * devInfo   = device information structure (model number, serial number)
+%   * cmdIds    = structre of command identification numbers retrieved from device. 
+%   * rspCodes  = structure of response codes retreived from device.
+%
+%
+% Note, in what follows 'dev' is assumed to be an instance of the FlyHerderSerial class.
+% dev = FlyHerderSerial(portName)
 %
 % Regular (public) class methods
 % -----------------------------
+%
+%   * open - opens serial connection to device
+%     Usage: dev.open()
+%
+%   * close - closes serial connection to device
+%     Usage: dev.close()
+%
+%   * delete - deletes instance of device object.
+%     Usage: dev.delete() or delete(dev)
+%
+%   * wait - waits until all moves currently running on the device have stopped.
+%     Usage: dev.wait()
+%
+%   * printDynamicMethods - prints the names of all dynamically generated class 
+%     methods. Note, the device must be opened for this command to work.
+%     Usage: dev.printDynamicMethods()
+% 
 % 
 % Dynamically generated (public) class methods
 % ---------------------------------------------
@@ -87,29 +119,104 @@
 %     in progress.
 %     Usage: value = dev.isRunning()
 %
-%   * moveToPosition
-%   * moveAxisToPosition
-%   * moveToHome
-%   * isInHomePosition
-%   * setMaxSeparation
-%   * getMaxSeparation
-%   * getPosition
-%   * getAxisPosition
-%   * setMaxSpeed
-%   * getMaxSpeed
-%   * setAcceleration
-%   * getAcceleration
-%   * setOrientation
-%   * getOrientation
-%   * setAxisOrientation
-%   * getAxisOrientation
-%   * setStepsPerMM - sets the device's steps per millimeter value
+%   * moveToPosition - move system to given position
+%     Usage: dev.moveToPosition(x0, y0, x1, y1) or dev.moveToPosition(pos) where
+%      - x0, y0, x1, y1 are the position (mm) of the axes with the same name or 
+%      - pos is a structure with fields x0, y0, x1, y1 specifying the axis positions (mm)
+%
+%   * moveAxisToPosition - moves the specified axis to the given position
+%     Usage: dev.moveAxisToPosition(axisName, position)
+%       - axisName = name of axis to move 'x0', 'y0', 'x1', or 'y1'
+%       - position = position to which axis should be moved
+%
+%   * moveToHome - move the system to the home position. Uses the limit switches 
+%     to determine whether or not the home positions has been reached.
+%     Usage: dev.moveToHome()
+%
+%   * moveAxisToHome - move the specified axis to the home position. Uses the
+%     limits switches
+%     to determine home position.
+%     Usage: dev.moveAxisToHome(axisName)
+%      - axisName = 'x0', 'y0', 'x1', 'y1'
+%
+%   * isInHomePosition - returns true or false based on whether or not the system 
+%     is in the home 
+%     position
+%     Usage: value = dev.isInHomePosition()
+%
+%   * setMaxSeparation - sets the jaws open (or maximum) separation for the x
+%     and y directions. This value is used to determine how far to move in
+%     subsequent  positioning moves. 
+%     Usage:  dev.setMaxSeparation(dx, dy) or dev.setMaxSeparation(sepStruct) where
+%      - dx, dy are the jaws open (or max) separations between the x0,x1 and y0,y1 
+%        axes  respectively.
+%      - sepStruct is structure with fields named 'x' and 'y' the values of which 
+%        specify the maximum separations in the x and y directions.
+%
+%   * getMaxSeparation - returns a structure containing the current values for 
+%     the maximum separation for the x and y  directions. 
+%     Usage: maxSeparation = dev.getMaxSeparation()
+%
+%   * getPosition - returns a structure with fields 'x0', 'y0', 'x1', 'y1' whose 
+%     values specify the current position of the device. 
+%     Usage: pos = dev.getPosition()
+%
+%   * getAxisPosition - returns the position of the specified axis.
+%     Usage:  pos = dev.getAxisPosition(axisName)
+%      - axisName = 'x0', 'y0', 'x1', 'y1'
+%
+%   * setPosition - set the current position of the system to the current values. 
+%     Note, does not move the system - just sets the position value.
+%     Usage: dev.setPosition(x0,y0,x1,y1) or dev.setPosition(pos) where
+%      - x0, y0, x1, y1 are the desired positions of the axes in mm
+%      - pos is a structure with fields named 'x0', 'y0', 'x1', 'y1' which specify 
+%        the desired positions in mm.
+%
+%   * setAxisPosition - sets the position of the specified axis. Note, does not move 
+%     axis - just sets the position value.
+%     Usage: dev.setPosition(axisName, pos)
+%      - axisName = 'x0', 'y0', 'x1', 'y1'
+%      - pos = position in mm
+%
+%   * setSpeed - sets the desired operating speed for the all axes. 
+%     Usage: dev.setSpeed(speed)
+%      - speed = desired speed mm/s, allowed arange 0.1mm/s to 90mm/s
+%
+%   * getSpeed - returns the current operating speed in in mm/s
+%     Usage: speed in dev.getSpeed()
+%
+%   * setOrientation - sets the orientation values for all axis. Note, an axis can be in 
+%     normal, '+', orientatin or in inverted, '-', orientation. The output of the direction
+%     pin is inverted when an axis's orientatin is inverted. 
+%     Usage: dev.setOrientation(val_x0, val_y0, val_x1, val_y1) or 
+%            dev.setOrientation(orientationStruct) where
+%      - val_x0, val_y0, val_x1, val_y1 are the orientations values for the 
+%        x0, y0, x1, y1 axis with values or either '+', or '-'
+%      - orientationStruct = structure with fields x0, y0, x1, y1 whose
+%        values, either '+' or '-' specify the desired orientation value.
+%
+%   * getOrientation - returns a structure with fields 'x0', 'y0', 'x1', 'y1' whose 
+%     values are the current orientation setting for the axis with that name.
+%     Usage: orientationStruct = dev.getOrientation()
+%
+%   * setAxisOrientation - sets the orientation of the specified axis.
+%     Usage: dev.setOrientation(axisName, orientation) where
+%      - axisName = 'x0', 'y0', 'x1', or 'y1'
+%      - orientation = desired orientation - either '+' for normal or '-' for inverted.
+%
+%   * getAxisOrientation - returns the current axis orientation setting - either '+' or
+%     '-' (inverted).
+%     Usage: orientation = dev.getAxisOrientation()
+%     
+%   * setStepsPerMM - sets the steps per millimeter value used to convert positions 
+%     in mm to  stepper motor steps.
 %     Usage: dev.setStepsPerMM(stepsPerMM)
 %
-%   * getStepsPerMM - returns the device's current steps per millimeter value
+%   * getStepsPerMM - returns the  current steps per millimeter value used to 
+%     convert positions in mm to stepper motor steps.
 %     Usage: stepsPerMM = dev.getStepsPerMM()
 %
-%   * setSerialNumber - sets the devices serial number
+%   * setSerialNumber - sets the serial number of the device (NOT IMPLEMENTED)    
 %     Usage: dev.setSerialNumber(serialNum)
 % 
 %   * getSerialNumber - returns the device serial number
@@ -118,9 +225,6 @@
 %   * getModelNumber - returns the device model number
 %     Usage: modelNum = dev.getModelNumber()
 %
-%
-% Author: Will Dickson, IO Rodeo Inc.
-% 
 
 classdef FlyHerderSerial < handle 
     
@@ -133,9 +237,12 @@ classdef FlyHerderSerial < handle
         cmdIdStruct = [];
         devInfoStruct = [];
         rspCodeStruct = [];
+        orderedAxisNames = {};
+        orderedDimNames = {};
+
     end
 
-    properties (Constant) 
+    properties (Constant, Access=private) 
 
         % Serial communication parameters.
         baudrate = 9600;
@@ -372,7 +479,6 @@ classdef FlyHerderSerial < handle
             cmdStr = sprintf('%s]',cmdStr);
         end
 
-
         function flag = isDynamicMethod(obj,S)
             % isDynamicMethod - used in the subsred function to determine whether
             % or not the method is dynamically generated. This is determined by
@@ -401,8 +507,9 @@ classdef FlyHerderSerial < handle
             end
             cmdId = obj.cmdIdStruct.(cmdName);
             % Convert command arguments from structure if required
-            %if length(cmdArgs) == 1 && strcmp(class(cmdArgs{1}), 'struct')
-            %end
+            if length(cmdArgs) == 1 && strcmp(class(cmdArgs{1}), 'struct')
+                cmdArgs = obj.convertArgStructToCell(cmdArgs{1});
+            end
 
             % Send command and get response
             rspStruct = obj.sendCmd(cmdId,cmdArgs{:});
@@ -458,10 +565,79 @@ classdef FlyHerderSerial < handle
         end
 
         function createOrderedAxisNames(obj)
+            % Creates cell array of ordered axis names. Designed to be
+            % used in open call so can't use subsref. Should be called after
+            % createCmdIdStruct.
+            axisOrderStruct = obj.sendCmd(obj.cmdIdStruct.getAxisOrder);
+            obj.orderedAxisNames = {};
+            axisFields = fieldnames(axisOrderStruct);
+            for i = 1:length(axisFields)
+                name = axisFields{i};
+                num = axisOrderStruct.(name);
+                obj.orderedAxisNames{num+1} = name;
+            end
         end
 
         function createOrderedDimNames(obj)
+            % Creates cell array of ordered Dimension names.  Designed to be
+            % used in open call so can't use subsref. Should be called after
+            % createCmdIdStruct.
+            dimOrderStruct = obj.sendCmd(obj.cmdIdStruct.getDimOrder);
+            obj.orderedDimNames = {};
+            dimFields = fieldnames(dimOrderStruct);
+            for i = 1:length(dimFields)
+                name = dimFields{i};
+                num = dimOrderStruct.(name);
+                obj.orderedDimNames{num+1} = name;
+            end
+        end
+
+        function cmdArgs = convertArgStructToCell(obj,argStruct) 
+            % Converts a command argument from a structure to a cell array. Note,
+            % the structure must have fields which are either the axis names or
+            % the dimension names.
+            cmdArgs = {};
+            argFieldNames = fieldnames(argStruct);
+            if isCellEqual(obj.orderedAxisNames,argFieldNames)
+                orderedNames = obj.orderedAxisNames;
+            elseif isCellEqual(obj.orderedDimNames,argFieldNames)
+                orderedNames = obj.orderedDimNames;
+            else
+                error('unknown structure as command argument');
+            end
+            for i = 1:length(orderedNames)
+                name = orderedNames{i};
+                cmdArgs{i} = argStruct.(name);
+            end
+        end
+
+    end
+end
+
+% Utility functions
+% -----------------------------------------------------------------------------
+function flag = isCellEqual(cellArray1, cellArray2)
+    % Tests whether or not two cell arrays of strings are eqaul.  
+    % Returns false if both cell array don't consist entirely of strings 
+    flag = true;
+    for i = 1:length(cellArray1)
+        string = cellArray1{i};
+        if ~isInCell(string,cellArray2)
+            flag = false;
         end
     end
-    
+end
+
+
+function flag = isInCell(string, cellArray)
+    % Test whether or not the given string is in the given cellArray.
+    flag = false;
+    if strcmp(class(string), 'char')
+        for i = 1:length(cellArray)
+            if strcmp(class(cellArray{i}),'char') && strcmp(cellArray{i}, string)
+                flag = true;
+                break;
+            end
+        end
+    end
 end

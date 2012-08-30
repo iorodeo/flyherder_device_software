@@ -355,7 +355,11 @@ classdef FlyHerderSerial < handle
             % wait - wait until the device is no longer running, i.e., until
             % isRunning is false.
             if obj.isOpen
-                while obj.isRunning()
+                while true 
+                    rsp = obj.sendCmd(obj.cmdIdStruct.isRunning)
+                    if ~rsp.isRunning
+                        break;
+                    end
                     pause(obj.waitPauseDt);
                 end
             end

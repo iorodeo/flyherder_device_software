@@ -1,0 +1,12 @@
+
+ Matlab serial library installation instructions
+ ----------------------------------------------- 
+ 
+ Add the flyherder_libs/matlab/flyherder_serial directory and all
+ subdirectorys to the Matlab path.
+
+ Examples can be found in the flyherder_libs/matlab/flyherder_examples
+ directory.
+
+ For documentation on the FlyHerderSerial object type: 
+ "help FlyHerderSerial" at the Matlab command prompt.

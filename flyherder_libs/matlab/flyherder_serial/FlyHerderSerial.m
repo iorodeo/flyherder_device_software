@@ -253,6 +253,7 @@ classdef FlyHerderSerial < handle
         resetDelay = 2.0;
         inputBufferSize = 2048;
         waitPauseDt = 0.25;
+        powerOnDelay = 1.5;
 
         % Command ids for basic commands.
         cmdIdGetDevInfo = 0;
@@ -356,7 +357,10 @@ classdef FlyHerderSerial < handle
             % isRunning is false.
             if obj.isOpen
                 while true 
-                    rsp = obj.sendCmd(obj.cmdIdStruct.isRunning)
+                    % Call isRunning method .. a bit kludgey but apparently
+                    % matlab doesn't let you call dynamic methods from within
+                    % the class itself.
+                    rsp = obj.sendCmd(obj.cmdIdStruct.isRunning);
                     if ~rsp.isRunning
                         break;
                     end
@@ -410,10 +414,15 @@ classdef FlyHerderSerial < handle
                     fprintf('%c',rspStrJson);
                     fprintf('\n');
                 end
+
                 try
                     rspStruct = loadjson(rspStrJson);
                 catch ME
-                    disp('Unable to parse device response');
+                    causeME = MException( ... 
+                        'FlyHerderSerial:unableToPaseJSON', ... 
+                        'Unable to parse device response' ...
+                        );
+                    ME = addCause(ME, causeME); 
                     rethrow(ME);
                 end
 
@@ -422,42 +431,58 @@ classdef FlyHerderSerial < handle
                     rspCmdId = rspStruct.cmdId;
                     rspStruct = rmfield(rspStruct, 'cmdId');
                 catch ME
-                    disp('Device response does not contain command Id')
+                    causeME = MException( ... 
+                        'FlyHerderSerial:MissingCommandId', ... 
+                        'device response does not contain command Id' ...
+                        );
+                    ME = addCause(ME, causeME);
                     rethrow(ME);
                 end
+
                 if rspCmdId ~= cmdId
-                    errMsg = sprintf( ...
+                    msg = sprintf( ...
                         'Command Id returned, %d, does not match that sent, %d', ...
                         rspCmdId, ...
                         cmdId ...
                         );
-                    error(errMsg);
+                    ME = MException('FlyHerderSerial:cmdIDDoesNotMatch', msg);
+                    throw(ME);
                 end
+
 
                 % Get response status
                 try
                     rspStatus = rspStruct.status;
                     rspStruct = rmfield(rspStruct,'status');
                 catch ME
-                    disp('Device response does not contain status');
+                    causeME = MException( ... 
+                        'FlyHerderSerial:MissingStatus', ... 
+                        'Device response does not contain status' ... 
+                        );
+                    ME = addCause(ME, causeME);
                     rethrow(ME);
                 end
 
                 % Check response status 
                 if ~isempty(obj.rspCodeStruct)
                     if rspStatus ~= obj.rspCodeStruct.rspSuccess
+                        errMsg = 'device responded with error';
                         try
-                            errMsg = rspStruct.errMsg;
+                            errMsg = sprintf('%s, %s',errMsg, rspStruct.errMsg);
                         catch ME
-                            errMsg = 'repsonse status ~= rspSuccess &' 
-                            errMsg = [errMsg, ' device response does not contain errMsg'];
+                            errMsg = sprintf('%s, but error message is missing', errMsg);
                         end
-                        error(errMsg);
+                        ME = MException('FlyHerderSerial:DeviceResponseError', errMsg);
+                        throw(ME);
                     end
                 end
 
             else
-                error('Connection must be open to send message');
+                ME = MException( ... 
+                    'FlyHerderSerial:DeviceNotOpen', ... 
+                    'connection must be open to send command to device' ...
+                    );
+                throw(ME);
             end
         end
 
@@ -477,7 +502,9 @@ classdef FlyHerderSerial < handle
                     case 'char'
                         cmdStr = sprintf('%s, %s', cmdStr, arg);
                     otherwise
-                        error('unknown type %s',class(arg));
+                        errMsg = sprintf('unknown type, %s, in command', class(arg));
+                        ME = MException('FlyHerderSerial:UnknownType', errMsg);
+                        throw(ME);
                 end
             end
             cmdStr = sprintf('%s]',cmdStr);
@@ -500,7 +527,7 @@ classdef FlyHerderSerial < handle
         end
 
         function rtnVal = dynamicMethodFcn(obj,S)
-            % dynamicMethodFcn - implements a the dynamically generated methods.
+            % dynamicMethodFcn - implements a the dynamically generated class methods.
 
             % Get command name, command args and command id number
             cmdName = S(1).subs;
@@ -517,6 +544,11 @@ classdef FlyHerderSerial < handle
 
             % Send command and get response
             rspStruct = obj.sendCmd(cmdId,cmdArgs{:});
+
+            % If is setDrivePowerOn command pause pause to let drive wake up.
+            if strcmp(cmdName,'setDrivePowerOn')
+                pause(obj.powerOnDelay);
+            end
 
             % Convert response into return value.
             rspFieldNames = fieldnames(rspStruct);
@@ -585,7 +617,7 @@ classdef FlyHerderSerial < handle
         function createOrderedDimNames(obj)
             % Creates cell array of ordered Dimension names.  Designed to be
             % used in open call so can't use subsref. Should be called after
-            % createCmdIdStruct.
+            % createCmdIdStruct. 
             dimOrderStruct = obj.sendCmd(obj.cmdIdStruct.getDimOrder);
             obj.orderedDimNames = {};
             dimFields = fieldnames(dimOrderStruct);
@@ -607,7 +639,9 @@ classdef FlyHerderSerial < handle
             elseif isCellEqual(obj.orderedDimNames,argFieldNames)
                 orderedNames = obj.orderedDimNames;
             else
-                error('unknown structure as command argument');
+                errMsg = 'unknown structure as command argument';
+                ME = MException('FlyHerderSerial:UnknownType', errMsg);
+                throw(ME);
             end
             for i = 1:length(orderedNames)
                 name = orderedNames{i};

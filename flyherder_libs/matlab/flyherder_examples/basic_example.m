@@ -7,16 +7,17 @@ function basic_example(port)
 %
 % Usage: 
 %
-% basic_example('com5')
+% basic_example('com5')  % replace com5 with the port of your device
 %
 %
-
-    homeSpeed = 80.0;
-    moveSpeed = 30.0;
+    homeSpeed = 30.0;
+    moveSpeed = 10.0;
 
     maxSeparationX = 200;
     maxSeparationY = 200;
 
+    % Create flyherder device object, open serial connection and 
+    % turn on drive power.
     dev = FlyHerderSerial(port);
     dev.open();
     dev.setDrivePowerOn();
@@ -25,7 +26,8 @@ function basic_example(port)
     dev.setMaxSeparation(maxSeparationX, maxSeparationY);  
 
     % Set the axis orientations ('+' = normal, '-' = reversed)
-    dev.setOrientation('-', '-', '+', '+');   % x0, y0, x1, y1
+    % axis order x0, y0, x1, y1
+    dev.setOrientation('-', '-', '+', '+');   
 
     % Move to the home position (uses limit switches to find home)
     % and wait until move is complete.
@@ -34,6 +36,9 @@ function basic_example(port)
     dev.moveToHome();
     dev.wait();  
     fprintf('done\n');
+
+    % Pause for a little bit for added dramma
+    pause(2.0)
 
     % Move to the position
     fprintf('moving to position ...');
@@ -46,6 +51,9 @@ function basic_example(port)
     dev.wait();
     fprintf('done\n');
 
+    % Clean up - 
+    dev.setDrivePowerOff();
     dev.close();
     delete(dev);
+
 end

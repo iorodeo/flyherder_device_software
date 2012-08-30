@@ -1,0 +1,18 @@
+flyherder_serial installation instructions
+------------------------------------------
+
+Requirements:
+
+* PySerial http://pyserial.sourceforge.net/ 
+
+Uses the usual python package installation via setup_tools - install with
+"python setup.py install" from the command line when in the 
+flyherder_libs/python/flyherder_serial directory. 
+For more infomration See the INSTALL.txt file in the 
+flyherder_libs/python/flyherder_serial directory. 
+
+Examples of can be found in the
+flyherder_libs/python/flyherder_serial/examples directory.
+
+Unit tests of the serial api can be found in
+flyherder_libs/flyherder_serial/test directory. See the readme before running.

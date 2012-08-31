@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'flyherder_gui.ui'
 #
-# Created: Fri Aug 31 13:23:04 2012
+# Created: Fri Aug 31 13:28:41 2012
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(678, 464)
+        MainWindow.resize(678, 455)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -21,8 +21,8 @@ class Ui_MainWindow(object):
         MainWindow.setSizePolicy(sizePolicy)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout_9 = QtGui.QVBoxLayout(self.centralwidget)
-        self.verticalLayout_9.setObjectName("verticalLayout_9")
+        self.horizontalLayout_4 = QtGui.QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")
         self.setupTab = QtGui.QWidget()
@@ -73,11 +73,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout_4.addWidget(self.widget)
         self.verticalLayout_6.addWidget(self.commGroupBox)
-        self.line = QtGui.QFrame(self.widget_9)
-        self.line.setFrameShape(QtGui.QFrame.HLine)
-        self.line.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.verticalLayout_6.addWidget(self.line)
         self.paramGroupBox = QtGui.QGroupBox(self.widget_9)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
@@ -506,11 +501,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.addItem(spacerItem14)
         self.verticalLayout.addWidget(self.widget_10)
         self.verticalLayout_7.addWidget(self.moveGroupBox)
-        self.line_3 = QtGui.QFrame(self.widget_6)
-        self.line_3.setFrameShape(QtGui.QFrame.HLine)
-        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_3.setObjectName("line_3")
-        self.verticalLayout_7.addWidget(self.line_3)
         self.positionGroupBox = QtGui.QGroupBox(self.widget_6)
         self.positionGroupBox.setObjectName("positionGroupBox")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.positionGroupBox)
@@ -677,7 +667,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem20)
         self.verticalLayout_8.addWidget(self.widget_6)
         self.tabWidget.addTab(self.controlTab, "")
-        self.verticalLayout_9.addWidget(self.tabWidget)
+        self.horizontalLayout_4.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -693,7 +683,7 @@ class Ui_MainWindow(object):
         self.actionUsage.setObjectName("actionUsage")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

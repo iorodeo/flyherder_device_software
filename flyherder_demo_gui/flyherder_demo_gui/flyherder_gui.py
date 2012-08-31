@@ -29,9 +29,6 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
         self.connectActions()
 
     def setupTimer(self):
-        """
-        Setup timer object
-        """
         self.timer = QtCore.QTimer()
         self.timer.setInterval(TIMER_INTERVAL_MS)
         try:
@@ -235,6 +232,11 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             self.movePushButton.setEnabled(False)
             self.homePushButton.setEnabled(True)
             self.stopPushButton.setEnabled(True)
+            try:
+                pos = self.dev.getPosition()
+                self.updatePosLabels(pos)
+            except Exception, e:
+                QtGui.QMessageBox.critical(self,'Error', str(e).title())
         else:
             self.powerOffDrive()
             self.statusbar.showMessage('Connected: Power Off')
@@ -324,7 +326,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
         self.posLineEdit_3.setText(str(int(round(pos['y1']))))
             
     def updatePosLabels(self,pos):
-        if (pos['x0'] != '') and self.isHomed:
+        if self.pwrCheckBox.isChecked():
             self.posLabel_0.setText(str(int(round(pos['x0']))))
             self.posLabel_1.setText(str(int(round(pos['y0']))))
             self.posLabel_2.setText(str(int(round(pos['x1']))))

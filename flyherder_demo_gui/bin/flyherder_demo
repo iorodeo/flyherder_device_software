@@ -1,0 +1,2 @@
+from  flyherder_demo_gui import flyHerderMain
+flyHerderMain()

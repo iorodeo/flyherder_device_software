@@ -67,7 +67,6 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
         self.maxPos = {'x':0,'y':0}
         self.isHomed = False
         self.isInitialized = False
-        self.isSeparationSet = False
         self.moveSpeed = self.moveSpeedLineEdit.text()
         self.homeSpeed = self.homeSpeedLineEdit.text()
         self.moveSpeedValidator = QtGui.QIntValidator(MIN_SPEED,MAX_SPEED,self.moveSpeedLineEdit)
@@ -167,7 +166,6 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
                 continue
         except Exception, e:
             QtGui.QMessageBox.critical(self,'Error', str(e))
-        self.isSeparationSet = False
         self.isHomed = False
         self.homePushButton.setEnabled(False)
         self.stopPushButton.setEnabled(False)
@@ -217,13 +215,8 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             if (int(xSep)<MIN_SEP_MM) or (int(ySep)<MIN_SEP_MM):
                 QtGui.QMessageBox.warning(self,'Warning','Please check separation values...')
                 return
-
             try:
                 self.dev.setMaxSeparation(self.maxPos)        
-                if not self.isSeparationSet:
-                    self.isSeparationSet = True
-                    self.homePushButton.setEnabled(True)
-                    self.stopPushButton.setEnabled(True)
             except Exception, e:
                 QtGui.QMessageBox.critical(self,'Error', str(e).title())
 
@@ -234,22 +227,18 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             self.statusbar.showMessage('Connected: Enabling...')
             self.pwrCheckBox.setEnabled(False)
             self.powerOnDrive()
-            self.settingsGroupBox.setEnabled(True)
-            self.xSepLineEdit.setFocus()
-            self.xSepLineEdit.setCursorPosition(0)
-            self.xSepLineEdit.selectAll()
+            self.paramGroupBox.setEnabled(True)
             self.pwrCheckBox.setEnabled(True)
-            self.statusbar.showMessage('Connected: Enabled (not Homed)')
-            self.orientGroupBox.setEnabled(True)
+            self.statusbar.showMessage('Connected: Power On, Not Homed')
             self.moveGroupBox.setEnabled(False)
+            self.positionGroupBox.setEnabled(True)
             self.movePushButton.setEnabled(False)
-            self.stopPushButton.setEnabled(False)
-            self.homePushButton.setEnabled(False)
+            self.homePushButton.setEnabled(True)
+            self.stopPushButton.setEnabled(True)
         else:
             self.powerOffDrive()
-            self.statusbar.showMessage('Connected: Disabled')
-            self.settingsGroupBox.setEnabled(False)
-            self.orientGroupBox.setEnabled(False)
+            self.statusbar.showMessage('Connected: Power Off')
+            self.paramGroupBox.setEnabled(False)
             self.moveGroupBox.setEnabled(False)
             self.movePushButton.setEnabled(False)
 
@@ -356,7 +345,10 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
         except IOError, e:
             msgTitle = 'Unable to stop:'
             QtGui.QMessageBox.warning(self,msgTitle, e)           
-            self.statusbar.showMessage('Connected: Drive On')
+            if self.isHomed:
+                self.statusbar.showMessage('Connected: Power On, Homed')
+            else:
+                self.statusbar.showMessage('Connected: Power On, Not Homed')
 
     def timer_Callback(self):
         try:
@@ -374,19 +366,20 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             QtGui.QMessageBox.warning(self,msgTitle, e)           
 
     def setWidgetDisabledOnRun(self):
-        self.settingsGroupBox.setEnabled(False)
+        self.paramGroupBox.setEnabled(False)
         self.connectPushButton.setEnabled(False)
         self.movePushButton.setEnabled(False)
         self.homePushButton.setEnabled(False)
         self.setPosLineEditsEnabled(False)
 
     def setWidgetEnabledOnStop(self):
-        self.settingsGroupBox.setEnabled(True)
+        self.paramGroupBox.setEnabled(True)
         self.connectPushButton.setEnabled(True)
         self.homePushButton.setEnabled(True)
         if self.isHomed:
+            self.moveGroupBox.setEnabled(True)
             self.movePushButton.setEnabled(True)
-            self.statusbar.showMessage('Connected: Enabled (Homed)')
+            self.statusbar.showMessage('Connected: Power On, Homed')
             self.setPosLineEditsEnabled(True)
 
     def setPosLineEditsEnabled(self,b):
@@ -398,18 +391,18 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def setWidgetEnabledOnDisconnect(self):
         self.pwrCheckBox.setChecked(False)
         self.portLineEdit.setEnabled(True)
-        self.settingsGroupBox.setEnabled(False)
         self.pwrCheckBox.setEnabled(False)
-        self.orientGroupBox.setEnabled(False)
         self.moveGroupBox.setEnabled(False)
+        self.paramGroupBox.setEnabled(False)
         self.positionGroupBox.setEnabled(False)
         self.connectPushButton.setText('Connect')
         self.statusbar.showMessage('Not Connected')
 
     def setWidgetEnabledOnConnect(self):
         self.portLineEdit.setEnabled(False)
+        self.paramGroupBox.setEnabled(True)
         self.pwrCheckBox.setEnabled(True)
-        self.statusbar.showMessage('Connected: Disabled')
+        self.statusbar.showMessage('Connected: Power Off')
 
     def cleanUpAndCloseDevice(self):
         self.powerOffDrive()

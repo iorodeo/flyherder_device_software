@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'flyherder_gui.ui'
 #
-# Created: Fri Aug 31 12:44:58 2012
+# Created: Fri Aug 31 13:19:55 2012
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -284,7 +284,6 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         self.orientCheckBox_0.setFont(font)
         self.orientCheckBox_0.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.orientCheckBox_0.setAccessibleName("")
         self.orientCheckBox_0.setText("")
         self.orientCheckBox_0.setChecked(True)
         self.orientCheckBox_0.setObjectName("orientCheckBox_0")
@@ -301,7 +300,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         self.orientCheckBox_1.setFont(font)
-        self.orientCheckBox_1.setAccessibleName("")
         self.orientCheckBox_1.setText("")
         self.orientCheckBox_1.setChecked(True)
         self.orientCheckBox_1.setObjectName("orientCheckBox_1")
@@ -318,7 +316,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         self.orientCheckBox_2.setFont(font)
-        self.orientCheckBox_2.setAccessibleName("")
         self.orientCheckBox_2.setText("")
         self.orientCheckBox_2.setObjectName("orientCheckBox_2")
         self.horizontalLayout_3.addWidget(self.orientCheckBox_2)
@@ -334,7 +331,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         self.orientCheckBox_3.setFont(font)
-        self.orientCheckBox_3.setAccessibleName("")
         self.orientCheckBox_3.setText("")
         self.orientCheckBox_3.setObjectName("orientCheckBox_3")
         self.horizontalLayout_3.addWidget(self.orientCheckBox_3)
@@ -406,7 +402,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.posLineEdit_0.setFont(font)
-        self.posLineEdit_0.setAccessibleName("")
         self.posLineEdit_0.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.posLineEdit_0.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_0.setObjectName("posLineEdit_0")
@@ -432,7 +427,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.posLineEdit_1.setFont(font)
-        self.posLineEdit_1.setAccessibleName("")
         self.posLineEdit_1.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.posLineEdit_1.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_1.setObjectName("posLineEdit_1")
@@ -458,7 +452,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.posLineEdit_2.setFont(font)
-        self.posLineEdit_2.setAccessibleName("")
         self.posLineEdit_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.posLineEdit_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_2.setObjectName("posLineEdit_2")
@@ -484,7 +477,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.posLineEdit_3.setFont(font)
-        self.posLineEdit_3.setAccessibleName("")
         self.posLineEdit_3.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.posLineEdit_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_3.setObjectName("posLineEdit_3")
@@ -701,7 +693,7 @@ class Ui_MainWindow(object):
         self.actionUsage.setObjectName("actionUsage")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

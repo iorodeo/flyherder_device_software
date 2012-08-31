@@ -27,7 +27,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="setupTab">
        <attribute name="title">
@@ -577,9 +577,6 @@
                    <property name="contextMenuPolicy">
                     <enum>Qt::NoContextMenu</enum>
                    </property>
-                   <property name="accessibleName">
-                    <string/>
-                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -610,9 +607,6 @@
                     <font>
                      <family>Sans Serif</family>
                     </font>
-                   </property>
-                   <property name="accessibleName">
-                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -645,9 +639,6 @@
                      <family>Sans Serif</family>
                     </font>
                    </property>
-                   <property name="accessibleName">
-                    <string/>
-                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -675,9 +666,6 @@
                     <font>
                      <family>Sans Serif</family>
                     </font>
-                   </property>
-                   <property name="accessibleName">
-                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -828,9 +816,6 @@
                      <pointsize>10</pointsize>
                     </font>
                    </property>
-                   <property name="accessibleName">
-                    <string/>
-                   </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
                    </property>
@@ -898,9 +883,6 @@
                     <font>
                      <pointsize>10</pointsize>
                     </font>
-                   </property>
-                   <property name="accessibleName">
-                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
@@ -970,9 +952,6 @@
                      <pointsize>10</pointsize>
                     </font>
                    </property>
-                   <property name="accessibleName">
-                    <string/>
-                   </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
                    </property>
@@ -1040,9 +1019,6 @@
                     <font>
                      <pointsize>10</pointsize>
                     </font>
-                   </property>
-                   <property name="accessibleName">
-                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>

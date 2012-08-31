@@ -15,6 +15,7 @@ TIMER_INTERVAL_MS = 250 # ms
 DEFAULT_SPEED = 10 # mm/s
 DEFAULT_SEP = 200 # mm
 NUM_AXIS = 4
+INDEX_TO_AXIS = {0:'x0', 1: 'y0', 2: 'x1', 3: 'y1'}
 DEFAULT_POS = {'x0':-1,'y0':-1,'x1':-1,'y1':-1}
 DEFAULT_POS_LABELS = {'x0':'','y0':'','x1':'','y1':''}
 DEFAULT_ORIENT = {'x0':'-','y0':'-','x1':'+','y1':'+'}
@@ -125,7 +126,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             for i in range(n):
                 le = getattr(self,'posLineEdit_{0}'.format(i))
                 le.editingFinished.connect(self.updatePos_Callback)
-                axis = str(le.accessibleName())
+                axis = INDEX_TO_AXIS[i]
                 if (axis.find('y')>=0):
                     posValidator = QtGui.QIntValidator(MIN_POS,self.maxPos['y'],le)
                 else:
@@ -202,7 +203,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             for i in range(n):
                 le = getattr(self,'posLineEdit_{0}'.format(i))
                 le.textChanged.connect(self.updatePos_Callback)
-                axis = str(le.accessibleName())
+                axis = INDEX_TO_AXIS[i]
                 if (axis.find('y')>=0):
                     posValidator = QtGui.QIntValidator(MIN_POS,self.maxPos['y'],le)
                 else:
@@ -234,9 +235,9 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             self.stopPushButton.setEnabled(True)
             try:
                 pos = self.dev.getPosition()
-                self.updatePosLabels(pos)
             except Exception, e:
                 QtGui.QMessageBox.critical(self,'Error', str(e).title())
+            self.updatePosLabels(pos)
         else:
             self.powerOffDrive()
             self.statusbar.showMessage('Connected: Power Off')
@@ -247,7 +248,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def updatePos_Callback(self):
         for i in range(self.NUM_AXIS):
             le_pos = getattr(self,'posLineEdit_{0}'.format(i))
-            axis = str(le_pos.accessibleName())
+            axis = INDEX_TO_AXIS[i]
             pos = le_pos.text()
             if not (len(pos)>0):
                 return
@@ -256,7 +257,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
     def updateOrient_Callback(self):
         for i in range(self.NUM_AXIS):
             cb_orient = getattr(self,'orientCheckBox_{0}'.format(i))
-            axis = str(cb_orient.accessibleName())
+            axis = INDEX_TO_AXIS[i]
             if cb_orient.isChecked():
                 self.axisOrient[axis] = '-'
             else:
@@ -311,6 +312,7 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
         if self.isHomed:
             try:
                 self.timer.start()
+                self.statusbar.showMessage('Connected: Moving...')
                 self.dev.setOrientation(self.axisOrient)        
                 self.dev.setSpeed(self.moveSpeed)        
                 self.dev.moveToPosition(self.axisPos)
@@ -327,23 +329,26 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
             
     def updatePosLabels(self,pos):
         if self.pwrCheckBox.isChecked():
-            self.posLabel_0.setText(str(int(round(pos['x0']))))
-            self.posLabel_1.setText(str(int(round(pos['y0']))))
-            self.posLabel_2.setText(str(int(round(pos['x1']))))
-            self.posLabel_3.setText(str(int(round(pos['y1']))))
-        else:
-            self.posLabel_0.setText('')
-            self.posLabel_1.setText('')
-            self.posLabel_2.setText('')
-            self.posLabel_3.setText('')
+            try:
+                self.posLabel_0.setText(str(int(round(pos['x0']))))
+                self.posLabel_1.setText(str(int(round(pos['y0']))))
+                self.posLabel_2.setText(str(int(round(pos['x1']))))
+                self.posLabel_3.setText(str(int(round(pos['y1']))))
+                return
+            except TypeError:
+                pass
+        self.posLabel_0.setText('')
+        self.posLabel_1.setText('')
+        self.posLabel_2.setText('')
+        self.posLabel_3.setText('')
 
     def stopClicked_Callback(self):
         if self.dev is None:
             return
+        pos = None
         try:
             self.dev.stop()        
             pos = self.dev.getPosition()
-            self.updatePosLabels(pos)
         except IOError, e:
             msgTitle = 'Unable to stop:'
             QtGui.QMessageBox.warning(self,msgTitle, e)           
@@ -351,21 +356,35 @@ class FlyHerderMainWindow(QtGui.QMainWindow,Ui_MainWindow):
                 self.statusbar.showMessage('Connected: Power On, Homed')
             else:
                 self.statusbar.showMessage('Connected: Power On, Not Homed')
+        if pos is not None:
+            self.updatePosLabels(pos)
 
     def timer_Callback(self):
+        running = True
         try:
             if not self.dev.isRunning():
+                running = False
                 self.timer.stop()
-                pos = self.dev.getPosition()
-                if (self.dev.isInHomePosition()) and (not self.isHomed):
-                    self.isHomed = True
-                self.updatePosLabels(pos)
-                self.setWidgetEnabledOnStop()
-            else:
-                self.setWidgetDisabledOnRun()
         except IOError, e:
             msgTitle = 'Unable to query the device'
             QtGui.QMessageBox.warning(self,msgTitle, e)           
+            running = False
+            self.timer.stop()
+        if not running: 
+            try:
+                pos = self.dev.getPosition()
+                isInHomePosition = self.dev.isInHomePosition()
+            except IOError, e:
+                msgTitle = 'Unable to query the device'
+                QtGui.QMessageBox.warning(self,msgTitle, e)           
+                return
+
+            if isInHomePosition and (not self.isHomed):
+                self.isHomed = True
+            self.updatePosLabels(pos)
+            self.setWidgetEnabledOnStop()
+        else:
+            self.setWidgetDisabledOnRun()
 
     def setWidgetDisabledOnRun(self):
         self.paramGroupBox.setEnabled(False)

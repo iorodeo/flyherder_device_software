@@ -578,7 +578,7 @@
                     <enum>Qt::NoContextMenu</enum>
                    </property>
                    <property name="accessibleName">
-                    <string>x0</string>
+                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -612,7 +612,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>y0</string>
+                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -646,7 +646,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>x1</string>
+                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -677,7 +677,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>y1</string>
+                    <string/>
                    </property>
                    <property name="text">
                     <string/>
@@ -829,7 +829,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>x0</string>
+                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
@@ -900,7 +900,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>y0</string>
+                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
@@ -971,7 +971,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>x1</string>
+                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>
@@ -1042,7 +1042,7 @@
                     </font>
                    </property>
                    <property name="accessibleName">
-                    <string>y1</string>
+                    <string/>
                    </property>
                    <property name="layoutDirection">
                     <enum>Qt::LeftToRight</enum>

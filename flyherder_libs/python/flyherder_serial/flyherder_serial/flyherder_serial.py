@@ -6,12 +6,16 @@ from serial_device import SerialDevice, findDevices
 class FlyHerder(SerialDevice):
 
     BAUDRATE = 9600 
+    TIMEOUT = 8.0
     DEVICE_MODEL_NUMBER = 1105
     POWER_ON_SLEEP_T = 1.0
     WAIT_SLEEP_DT = 0.2
 
     def __init__(self,*args,**kwargs):
-        kwargs.update({'baudrate': FlyHerder.BAUDRATE})
+        kwargs.update({
+            'baudrate': FlyHerder.BAUDRATE, 
+            'timeout': FlyHerder.TIMEOUT,
+            })
         super(FlyHerder,self).__init__(*args,**kwargs)
         self.deviceInfoDict = self.getDeviceInfoDict()
         self.cmdDict = self.getCmdDict()

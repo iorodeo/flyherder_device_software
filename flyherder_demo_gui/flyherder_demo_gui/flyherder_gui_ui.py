@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'flyherder_gui.ui'
 #
-# Created: Fri Aug 31 10:00:28 2012
+# Created: Fri Aug 31 11:23:10 2012
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(633, 473)
+        MainWindow.resize(678, 468)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -276,7 +276,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_34.setFont(font)
-        self.label_34.setTextFormat(QtCore.Qt.RichText)
+        self.label_34.setTextFormat(QtCore.Qt.PlainText)
         self.label_34.setObjectName("label_34")
         self.horizontalLayout_3.addWidget(self.label_34)
         self.orientCheckBox_0 = QtGui.QCheckBox(self.stepsWidget_6)
@@ -293,7 +293,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_20.setFont(font)
-        self.label_20.setTextFormat(QtCore.Qt.RichText)
+        self.label_20.setTextFormat(QtCore.Qt.PlainText)
         self.label_20.setObjectName("label_20")
         self.horizontalLayout_3.addWidget(self.label_20)
         self.orientCheckBox_1 = QtGui.QCheckBox(self.stepsWidget_6)
@@ -309,7 +309,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_13.setFont(font)
-        self.label_13.setTextFormat(QtCore.Qt.RichText)
+        self.label_13.setTextFormat(QtCore.Qt.PlainText)
         self.label_13.setObjectName("label_13")
         self.horizontalLayout_3.addWidget(self.label_13)
         self.orientCheckBox_2 = QtGui.QCheckBox(self.stepsWidget_6)
@@ -324,7 +324,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_21.setFont(font)
-        self.label_21.setTextFormat(QtCore.Qt.RichText)
+        self.label_21.setTextFormat(QtCore.Qt.PlainText)
         self.label_21.setObjectName("label_21")
         self.horizontalLayout_3.addWidget(self.label_21)
         self.orientCheckBox_3 = QtGui.QCheckBox(self.stepsWidget_6)
@@ -388,7 +388,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_35.setFont(font)
-        self.label_35.setTextFormat(QtCore.Qt.RichText)
+        self.label_35.setTextFormat(QtCore.Qt.PlainText)
         self.label_35.setObjectName("label_35")
         self.horizontalLayout_5.addWidget(self.label_35)
         self.posLineEdit_0 = QtGui.QLineEdit(self.stepsWidget_5)
@@ -406,12 +406,14 @@ class Ui_MainWindow(object):
         self.posLineEdit_0.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_0.setObjectName("posLineEdit_0")
         self.horizontalLayout_5.addWidget(self.posLineEdit_0)
+        spacerItem10 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem10)
         self.label_22 = QtGui.QLabel(self.stepsWidget_5)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_22.setFont(font)
-        self.label_22.setTextFormat(QtCore.Qt.RichText)
+        self.label_22.setTextFormat(QtCore.Qt.PlainText)
         self.label_22.setObjectName("label_22")
         self.horizontalLayout_5.addWidget(self.label_22)
         self.posLineEdit_1 = QtGui.QLineEdit(self.stepsWidget_5)
@@ -429,12 +431,14 @@ class Ui_MainWindow(object):
         self.posLineEdit_1.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_1.setObjectName("posLineEdit_1")
         self.horizontalLayout_5.addWidget(self.posLineEdit_1)
+        spacerItem11 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem11)
         self.label_24 = QtGui.QLabel(self.stepsWidget_5)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_24.setFont(font)
-        self.label_24.setTextFormat(QtCore.Qt.RichText)
+        self.label_24.setTextFormat(QtCore.Qt.PlainText)
         self.label_24.setObjectName("label_24")
         self.horizontalLayout_5.addWidget(self.label_24)
         self.posLineEdit_2 = QtGui.QLineEdit(self.stepsWidget_5)
@@ -452,12 +456,14 @@ class Ui_MainWindow(object):
         self.posLineEdit_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_2.setObjectName("posLineEdit_2")
         self.horizontalLayout_5.addWidget(self.posLineEdit_2)
+        spacerItem12 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem12)
         self.label_23 = QtGui.QLabel(self.stepsWidget_5)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_23.setFont(font)
-        self.label_23.setTextFormat(QtCore.Qt.RichText)
+        self.label_23.setTextFormat(QtCore.Qt.PlainText)
         self.label_23.setObjectName("label_23")
         self.horizontalLayout_5.addWidget(self.label_23)
         self.posLineEdit_3 = QtGui.QLineEdit(self.stepsWidget_5)
@@ -475,8 +481,8 @@ class Ui_MainWindow(object):
         self.posLineEdit_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLineEdit_3.setObjectName("posLineEdit_3")
         self.horizontalLayout_5.addWidget(self.posLineEdit_3)
-        spacerItem10 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_5.addItem(spacerItem10)
+        spacerItem13 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem13)
         self.verticalLayout.addWidget(self.stepsWidget_5)
         self.widget_10 = QtGui.QWidget(self.moveGroupBox)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
@@ -496,8 +502,8 @@ class Ui_MainWindow(object):
         self.label_9 = QtGui.QLabel(self.widget_10)
         self.label_9.setObjectName("label_9")
         self.horizontalLayout_8.addWidget(self.label_9)
-        spacerItem11 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_8.addItem(spacerItem11)
+        spacerItem14 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_8.addItem(spacerItem14)
         self.verticalLayout.addWidget(self.widget_10)
         self.verticalLayout_7.addWidget(self.moveGroupBox)
         self.line_3 = QtGui.QFrame(self.widget_6)
@@ -523,7 +529,7 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_36.setFont(font)
-        self.label_36.setTextFormat(QtCore.Qt.RichText)
+        self.label_36.setTextFormat(QtCore.Qt.PlainText)
         self.label_36.setObjectName("label_36")
         self.horizontalLayout_6.addWidget(self.label_36)
         self.posLabel_0 = QtGui.QLabel(self.stepsWidget_7)
@@ -548,12 +554,14 @@ class Ui_MainWindow(object):
         self.posLabel_0.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLabel_0.setObjectName("posLabel_0")
         self.horizontalLayout_6.addWidget(self.posLabel_0)
+        spacerItem15 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem15)
         self.label_25 = QtGui.QLabel(self.stepsWidget_7)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_25.setFont(font)
-        self.label_25.setTextFormat(QtCore.Qt.RichText)
+        self.label_25.setTextFormat(QtCore.Qt.PlainText)
         self.label_25.setObjectName("label_25")
         self.horizontalLayout_6.addWidget(self.label_25)
         self.posLabel_1 = QtGui.QLabel(self.stepsWidget_7)
@@ -578,12 +586,14 @@ class Ui_MainWindow(object):
         self.posLabel_1.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLabel_1.setObjectName("posLabel_1")
         self.horizontalLayout_6.addWidget(self.posLabel_1)
+        spacerItem16 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem16)
         self.label_26 = QtGui.QLabel(self.stepsWidget_7)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_26.setFont(font)
-        self.label_26.setTextFormat(QtCore.Qt.RichText)
+        self.label_26.setTextFormat(QtCore.Qt.PlainText)
         self.label_26.setObjectName("label_26")
         self.horizontalLayout_6.addWidget(self.label_26)
         self.posLabel_2 = QtGui.QLabel(self.stepsWidget_7)
@@ -608,12 +618,14 @@ class Ui_MainWindow(object):
         self.posLabel_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLabel_2.setObjectName("posLabel_2")
         self.horizontalLayout_6.addWidget(self.posLabel_2)
+        spacerItem17 = QtGui.QSpacerItem(10, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem17)
         self.label_27 = QtGui.QLabel(self.stepsWidget_7)
         font = QtGui.QFont()
         font.setFamily("Sans Serif")
         font.setPointSize(11)
         self.label_27.setFont(font)
-        self.label_27.setTextFormat(QtCore.Qt.RichText)
+        self.label_27.setTextFormat(QtCore.Qt.PlainText)
         self.label_27.setObjectName("label_27")
         self.horizontalLayout_6.addWidget(self.label_27)
         self.posLabel_3 = QtGui.QLabel(self.stepsWidget_7)
@@ -638,8 +650,8 @@ class Ui_MainWindow(object):
         self.posLabel_3.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.posLabel_3.setObjectName("posLabel_3")
         self.horizontalLayout_6.addWidget(self.posLabel_3)
-        spacerItem12 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_6.addItem(spacerItem12)
+        spacerItem18 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem18)
         self.verticalLayout_5.addWidget(self.stepsWidget_7)
         self.widget_5 = QtGui.QWidget(self.positionGroupBox)
         self.widget_5.setObjectName("widget_5")
@@ -657,12 +669,12 @@ class Ui_MainWindow(object):
         self.stopPushButton.setFont(font)
         self.stopPushButton.setObjectName("stopPushButton")
         self.horizontalLayout_12.addWidget(self.stopPushButton)
-        spacerItem13 = QtGui.QSpacerItem(364, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_12.addItem(spacerItem13)
+        spacerItem19 = QtGui.QSpacerItem(364, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_12.addItem(spacerItem19)
         self.verticalLayout_5.addWidget(self.widget_5)
         self.verticalLayout_7.addWidget(self.positionGroupBox)
-        spacerItem14 = QtGui.QSpacerItem(20, 10, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_7.addItem(spacerItem14)
+        spacerItem20 = QtGui.QSpacerItem(20, 10, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.verticalLayout_7.addItem(spacerItem20)
         self.verticalLayout_8.addWidget(self.widget_6)
         self.tabWidget.addTab(self.controlTab, "")
         self.verticalLayout_9.addWidget(self.tabWidget)
@@ -704,84 +716,36 @@ class Ui_MainWindow(object):
         self.ySepLineEdit.setText(QtGui.QApplication.translate("MainWindow", "200", None, QtGui.QApplication.UnicodeUTF8))
         self.label_15.setText(QtGui.QApplication.translate("MainWindow", "[mm]", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Axis Orientation (check to reverse) ", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_34.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Impact\'; font-size:18pt;\">x</span><span style=\" font-family:\'Impact\'; font-size:18pt; vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_34.setText(QtGui.QApplication.translate("MainWindow", "X0", None, QtGui.QApplication.UnicodeUTF8))
         self.orientCheckBox_0.setAccessibleName(QtGui.QApplication.translate("MainWindow", "x0", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_20.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_20.setText(QtGui.QApplication.translate("MainWindow", "Y0", None, QtGui.QApplication.UnicodeUTF8))
         self.orientCheckBox_1.setAccessibleName(QtGui.QApplication.translate("MainWindow", "y0", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_13.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">x<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_13.setText(QtGui.QApplication.translate("MainWindow", "X1", None, QtGui.QApplication.UnicodeUTF8))
         self.orientCheckBox_2.setAccessibleName(QtGui.QApplication.translate("MainWindow", "x1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_21.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_21.setText(QtGui.QApplication.translate("MainWindow", "Y1", None, QtGui.QApplication.UnicodeUTF8))
         self.orientCheckBox_3.setAccessibleName(QtGui.QApplication.translate("MainWindow", "y1", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.setupTab), QtGui.QApplication.translate("MainWindow", "Device Setup", None, QtGui.QApplication.UnicodeUTF8))
         self.pwrCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Drive Power", None, QtGui.QApplication.UnicodeUTF8))
         self.moveGroupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Move To Position [mm]", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_35.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Impact\'; font-size:18pt;\">x</span><span style=\" font-family:\'Impact\'; font-size:18pt; vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_35.setText(QtGui.QApplication.translate("MainWindow", "X0 ", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_0.setAccessibleName(QtGui.QApplication.translate("MainWindow", "x0", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_0.setText(QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_22.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_22.setText(QtGui.QApplication.translate("MainWindow", "Y0", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_1.setAccessibleName(QtGui.QApplication.translate("MainWindow", "y0", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_1.setText(QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_24.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">x<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("MainWindow", "X1", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_2.setAccessibleName(QtGui.QApplication.translate("MainWindow", "x1", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_2.setText(QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_23.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_23.setText(QtGui.QApplication.translate("MainWindow", "Y1", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_3.setAccessibleName(QtGui.QApplication.translate("MainWindow", "y1", None, QtGui.QApplication.UnicodeUTF8))
         self.posLineEdit_3.setText(QtGui.QApplication.translate("MainWindow", "-1", None, QtGui.QApplication.UnicodeUTF8))
         self.movePushButton.setText(QtGui.QApplication.translate("MainWindow", "Move", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("MainWindow", "Note, the system must be homed ", None, QtGui.QApplication.UnicodeUTF8))
         self.positionGroupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Current Position [mm]", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_36.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Impact\'; font-size:18pt;\">x</span><span style=\" font-family:\'Impact\'; font-size:18pt; vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_25.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">0</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_26.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">x<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_27.setText(QtGui.QApplication.translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Impact\'; font-size:18pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">y<span style=\" vertical-align:sub;\">1</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_36.setText(QtGui.QApplication.translate("MainWindow", "X0", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_25.setText(QtGui.QApplication.translate("MainWindow", "Y0", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_26.setText(QtGui.QApplication.translate("MainWindow", "X1", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_27.setText(QtGui.QApplication.translate("MainWindow", "Y1", None, QtGui.QApplication.UnicodeUTF8))
         self.homePushButton.setText(QtGui.QApplication.translate("MainWindow", "Home", None, QtGui.QApplication.UnicodeUTF8))
         self.stopPushButton.setText(QtGui.QApplication.translate("MainWindow", "Stop", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.controlTab), QtGui.QApplication.translate("MainWindow", "Motion Controls", None, QtGui.QApplication.UnicodeUTF8))

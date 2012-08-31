@@ -42,6 +42,7 @@ function basic_example(port)
 
     % Move to the position
     fprintf('moving to position ...');
+    dev.enableBoundsCheck();
     dev.setSpeed(moveSpeed);
     posX0 = 2.0*maxSeparationX/5.0;
     posY0 = 2.0*maxSeparationY/5.0;
@@ -49,6 +50,7 @@ function basic_example(port)
     posY1 = 3.0*maxSeparationY/5.0;
     dev.moveToPosition(posX0, posY0, posX1, posY1);
     dev.wait();
+    dev.disableBoundsCheck();
     fprintf('done\n');
 
     % Clean up - 

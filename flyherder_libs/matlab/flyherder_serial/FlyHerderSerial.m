@@ -216,6 +216,17 @@
 %     convert positions in mm to stepper motor steps.
 %     Usage: stepsPerMM = dev.getStepsPerMM()
 %
+%   * enableBoundsCheck - enables bounds checking. When bounds checking is enabled the 
+%     device will not perform moves which it determines will cause a collision.
+%     Usage: dev.enableBoundsCheck()
+%
+%   * disableBoundsCheck - disables bounds checking.
+%     Usage: dev.disableBoundsCheck()
+%
+%   * isBoundsCheckEnabled - queries whether or not bounds checking is enabled. Returns 
+%     true or false.
+%     Usage: dev.isBoundsCheckEnabled()
+%
 %   * setSerialNumber - sets the serial number of the device (NOT IMPLEMENTED)    
 %     Usage: dev.setSerialNumber(serialNum)
 % 

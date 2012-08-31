@@ -10,7 +10,7 @@ function random_moves(port)
 % random_moves('com5')  % replace com5 with the port of your device.
 %
 %
-    numTrials = 25;
+    numTrials = 5;
     homeSpeed = 90.0;
     moveSpeed = 50.0;
 
@@ -57,6 +57,7 @@ function random_moves(port)
             pos.y1  ...
             );
 
+        dev.enableBoundsCheck();
         dev.setSpeed(moveSpeed);
         dev.moveToPosition(pos.x0, pos.y0, pos.x1, pos.y1);
         dev.wait();
@@ -69,7 +70,10 @@ function random_moves(port)
             pos.x1, ...
             pos.y1  ...
             );
+        dev.disableBoundsCheck();
+
     end
+
 
     % Clean up - 
     dev.setDrivePowerOff();

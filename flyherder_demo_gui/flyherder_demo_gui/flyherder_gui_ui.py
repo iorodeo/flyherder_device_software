@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'flyherder_gui.ui'
 #
-# Created: Fri Aug 31 13:28:41 2012
+# Created: Fri Aug 31 13:31:03 2012
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -683,7 +683,7 @@ class Ui_MainWindow(object):
         self.actionUsage.setObjectName("actionUsage")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

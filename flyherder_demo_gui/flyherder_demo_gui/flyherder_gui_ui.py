@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'flyherder_gui.ui'
 #
-# Created: Fri Aug 31 13:19:55 2012
+# Created: Fri Aug 31 13:23:04 2012
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(678, 468)
+        MainWindow.resize(678, 464)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -693,7 +693,7 @@ class Ui_MainWindow(object):
         self.actionUsage.setObjectName("actionUsage")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
